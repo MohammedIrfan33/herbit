@@ -1,0 +1,10 @@
+0 Tulsi
+1 Curry
+2 Drumstick
+3 Mint
+4 Mango
+5 Lemon
+6 Indian Mustard
+7 Neem
+8 Jackfruit
+9 Rasna

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "52829143887",
+    "project_id": "herbal-4f6af",
+    "storage_bucket": "herbal-4f6af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52829143887:android:cc81a64cd7020cf0387b3a",
+        "android_client_info": {
+          "package_name": "com.example.herbit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "52829143887-h25vferhf2tci582b8t1m9i82783nlo8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnPJuRjrXZGoIYwmJ3Ad4Vb2pkF4mRRb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52829143887-h25vferhf2tci582b8t1m9i82783nlo8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
