@@ -15,7 +15,7 @@ class _manageuserState extends State<manageuser> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
-        title: const Text('manage user'),
+        title: const Text('Manage user'),
       ),
       body: Center(
         child: Padding(

@@ -71,7 +71,7 @@ class _pending_doctorState extends State<pending_doctor> {
         body:Padding(
             padding: const EdgeInsets.all(8.0),
             child:StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('doctor').snapshots(),
+              stream: FirebaseFirestore.instance.collection('doctor').where('isAccepted',isEqualTo: false).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final appointments = snapshot.data!.docs;
