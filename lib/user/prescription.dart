@@ -102,7 +102,7 @@ class _prescriptionState extends State<prescription> {
 
 
 
-    List<Map<String, dynamc>> filteredData = allData.where((item) {
+    List<Map<String, dynamic>> filteredData = allData.where((item) {
   if (item.containsKey('treatment')) {
     List<Map<String, dynamic>> treatments =
         List<Map<String, dynamic>>.from(item['treatment']);
