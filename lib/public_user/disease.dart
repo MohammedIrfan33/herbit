@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:herbit/Login.dart';
 
-import '../user/doctor.dart';
+
 import 'homepage.dart';
 
 class disease extends StatefulWidget {
   final String text;
 
 
-  disease(this.text);
+  const disease(this.text);
 
   @override
   State<disease> createState() => _diseaseState();
@@ -35,7 +34,7 @@ class _diseaseState extends State<disease> {
 
     // Apply filter to the data (e.g., filter by a specific field)
     filteredData = allData.where((data) => data['symptom'] == widget.text).toList();
-    print("medicine$filteredData");
+    
 
     // Refresh the UI
     setState(() {});
@@ -47,24 +46,24 @@ class _diseaseState extends State<disease> {
         backgroundColor: Colors.green[900],
         actions: [
           IconButton(onPressed: (){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => homepage(),));
-          }, icon: Icon(Icons.home))
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const homepage(),));
+          }, icon: const Icon(Icons.home))
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
-          physics: ScrollPhysics(),
+          physics: const ScrollPhysics(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
 
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Text(
+              const Text(
                 'Symptoms',
                 style: TextStyle(
                   fontSize: 25,
@@ -72,12 +71,12 @@ class _diseaseState extends State<disease> {
                   decoration: TextDecoration.underline,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Text(
                 widget.text.toUpperCase(),
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
               ),
             /*  Text(
                 '* headache',
@@ -87,7 +86,7 @@ class _diseaseState extends State<disease> {
                 '* vomiting',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
               ),*/
-              Text(
+              const Text(
                 'Medicine',
                 style: TextStyle(
                   fontSize: 25,
@@ -95,32 +94,32 @@ class _diseaseState extends State<disease> {
                   decoration: TextDecoration.underline,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
     ListView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
     itemCount: filteredData.length,
     itemBuilder: (context, index) {
     // Display the filtered data
     return ListTile(
     title: Text(filteredData[index]['medicine'].toUpperCase())
     );},),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
 
-              SizedBox(height: 100,),
+              const SizedBox(height: 100,),
               Container(
                 width: double.infinity,
-                margin: EdgeInsets.symmetric(horizontal: 70),
+                margin: const EdgeInsets.symmetric(horizontal: 70),
                 height: 60,
                 color: Colors.green[900],
                 child: TextButton(
-                  child: Text('OK',style: TextStyle(color: Colors.white,fontSize: 25),),
+                  child: const Text('OK',style: TextStyle(color: Colors.white,fontSize: 25),),
                   onPressed: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => homepage(),));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const homepage(),));
                   },
                 ),
               ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 
-import 'package:flutter/material.dart';
 
 
 class MyHomePage extends StatefulWidget {
@@ -14,12 +13,12 @@ class _MyHomePageState extends State<MyHomePage> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: 200.0,
           child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Choose an option',
                   style: TextStyle(
@@ -31,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                 child: Container(
                   color: Colors.grey[200],
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text('Bottom modal sheet content'),
@@ -40,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               BottomNavigationBar(
-                items: [
+                items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.home),
                     label: 'Home',
@@ -70,12 +69,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bottom Modal Sheet Example'),
+        title: const Text('Bottom Modal Sheet Example'),
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: _showModalBottomSheet,
-          child: Text('Show bottom modal sheet'),
+          child: const Text('Show bottom modal sheet'),
         ),
       ),
     );

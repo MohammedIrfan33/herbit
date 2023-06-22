@@ -17,13 +17,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void initState() {
     // TODO: implement initState
-    Timer(Duration(seconds: 3),()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => homepage(),)));
+    Timer(const Duration(seconds: 3),()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const homepage(),)));
     super.initState();
     
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.green,
       body: Center(
 

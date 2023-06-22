@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:herbit/firebase/authentication.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'Login.dart';
+import 'login.dart';
+
 class Signup_Doctor extends StatefulWidget {
   const Signup_Doctor({Key? key}) : super(key: key);
 
@@ -14,10 +14,10 @@ class Signup_Doctor extends StatefulWidget {
 
 class _Signup_DoctorState extends State<Signup_Doctor> {
   bool passwordVisible = false;
-  TextEditingController _emailcontroller = TextEditingController();
-  TextEditingController _passwordcontroller = TextEditingController();
-  TextEditingController _firstnamecontroller = TextEditingController();
-  TextEditingController _qualificatoncontroller = TextEditingController();
+  final TextEditingController _emailcontroller = TextEditingController();
+  final TextEditingController _passwordcontroller = TextEditingController();
+  final TextEditingController _firstnamecontroller = TextEditingController();
+  final TextEditingController _qualificatoncontroller = TextEditingController();
   ImagePicker picker = ImagePicker();
   XFile? image;
 
@@ -48,12 +48,12 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
         child: Scaffold(
           body: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 30,),
+                  const SizedBox(height: 30,),
                   // Container(
                   //   width: 300,
                   //   height: 150,
@@ -68,7 +68,7 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                     padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 16),
                     child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
+                        const Text(
                           'Register',
                           style: TextStyle(
                               fontSize: 30,
@@ -79,7 +79,7 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                           height: 60,
                           width: 60,
                           color: Colors.white,
-                          child: Image(image: AssetImage('images/leaf.jpg')),
+                          child: const Image(image: AssetImage('images/leaf.jpg')),
                         )
                       ],
                     ),
@@ -121,7 +121,7 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                   Container(
                     child: TextField(
                       controller: _emailcontroller,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                         enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                         prefixIcon: Icon(Icons.email_sharp),
@@ -131,10 +131,10 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     child: TextField(
                       controller: _firstnamecontroller,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                         enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                         prefixIcon: Icon(Icons.person),
@@ -150,7 +150,7 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                   Container(
                     child: TextField(
                       controller: _qualificatoncontroller,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                         enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                         prefixIcon: Icon(Icons.person),
@@ -160,13 +160,13 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(vertical: 10),
+                    margin: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
                       controller: _passwordcontroller,
                       obscureText: passwordVisible,
                       decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                        focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                        enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                         // enabledBorder: OutlineInputBorder(
                         //     borderRadius: BorderRadius.circular(50)),
                         // focusedBorder: OutlineInputBorder(
@@ -203,8 +203,8 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                         onPressed: () {},
                         child: Text('LOGIN',
                             style: TextStyle(fontSize: 15, color: Colors.black))),*/
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 40),
                     child: Text(
                       "select image to upload",
                       style: TextStyle(fontSize: 17),
@@ -221,7 +221,7 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                           //update UI
                         });
                       },
-                      child: Text("Pick from gallery")),
+                      child: const Text("Pick from gallery")),
                   image == null ? Container() : Image.file(File(image!.path)),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -234,17 +234,17 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                           //update UI
                         });
                       },
-                      child: Text("Pick from camera")),
+                      child: const Text("Pick from camera")),
                   image == null ? Container() : Image.file(File(image!.path)),
 
 
                   Container(
                     width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 60),
+                    margin: const EdgeInsets.symmetric(horizontal: 60),
                     height: 60,
                     color: Colors.green[900],
                     child: TextButton(
-                      child: Text(
+                      child: const Text(
                         'Sign up',
                         style: TextStyle(color: Colors.white, fontSize: 25),
                       ),
@@ -258,14 +258,14 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "you have an account?",
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
                             color: Colors.black),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 3,
                       ),
                       TextButton(
@@ -279,7 +279,7 @@ class _Signup_DoctorState extends State<Signup_Doctor> {
                           child: const Text("Sign in"))
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
 

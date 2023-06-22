@@ -1,13 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:herbit/doctor/appointments.dart';
-import 'package:herbit/user/chat.dart';
-import 'package:herbit/user/chatbot.dart';
 import 'package:herbit/doctor/communication.dart';
 import 'package:herbit/doctor/profile_doctor.dart';
-import 'package:herbit/user/profile_user.dart';
 
-import '../user/doctor.dart';
 import 'chatbot_doctor.dart';
 class home_doctor extends StatefulWidget {
   const home_doctor({Key? key}) : super(key: key);
@@ -34,7 +30,7 @@ class _home_doctorState extends State<home_doctor> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => chatbot_doctor()));
+                      MaterialPageRoute(builder: (context) => const chatbot_doctor()));
                 },
                 child: Container(
                   child: Card(
@@ -47,8 +43,8 @@ class _home_doctorState extends State<home_doctor> {
                           width: 150,
                           fit: BoxFit.cover,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(),
+                        const Padding(
+                          padding: EdgeInsets.only(),
                           child: Text(
                             'chatbot',style: TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),),),
@@ -60,7 +56,7 @@ class _home_doctorState extends State<home_doctor> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => profile_doctor()));
+                      MaterialPageRoute(builder: (context) => const profile_doctor()));
                 },
                 child: Container(
                   child: Card(
@@ -73,11 +69,11 @@ class _home_doctorState extends State<home_doctor> {
                           width: 100,
                           fit: BoxFit.cover,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 2,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 20),
                           child: Text(
                             'profile doctor',
                             style: TextStyle(
@@ -92,7 +88,7 @@ class _home_doctorState extends State<home_doctor> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => communication()));
+                      MaterialPageRoute(builder: (context) => const communication()));
                 },
                 child: Container(
                   child: Card(
@@ -105,8 +101,8 @@ class _home_doctorState extends State<home_doctor> {
                           width: 140,
                           fit: BoxFit.cover,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10,top: 3),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 10,top: 3),
                           child: Text(
                             'patients',
                             style: TextStyle(
@@ -121,7 +117,7 @@ class _home_doctorState extends State<home_doctor> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>  Appointments()));
+                      MaterialPageRoute(builder: (context) =>  const Appointments()));
                 },
                 child: Container(
                   child: Card(
@@ -134,11 +130,11 @@ class _home_doctorState extends State<home_doctor> {
                           width: 150,
                           fit: BoxFit.cover,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 2,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 20),
                           child: Text(
                             'Appoinments',
                             style: TextStyle(

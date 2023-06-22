@@ -1,17 +1,12 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:herbit/admin/addnotify.dart';
 import 'package:herbit/admin/addsymptoms.dart';
-import 'package:herbit/firebase/authentication.dart';
-import 'package:herbit/user/chat.dart';
-import 'package:herbit/user/chatbot.dart';
+import 'package:herbit/public_user/homepage.dart';
 import 'package:herbit/admin/managedoctor.dart';
 import 'package:herbit/admin/manageuser.dart';
 import 'package:herbit/admin/product.dart';
-import 'package:herbit/user/profile_user.dart';
 
-import '../user/doctor.dart';
 class  home_admin extends StatefulWidget {
   const home_admin({Key? key}) : super(key: key);
 
@@ -39,7 +34,7 @@ class _home_adminState extends State<home_admin> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => addsymptoms()));
+                      MaterialPageRoute(builder: (context) => const addsymptoms()));
                 },
                 child: Container(
                   child: Card(
@@ -55,8 +50,8 @@ class _home_adminState extends State<home_admin> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 30),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 30),
                           child: Text(
                             'symptoms',
                             style: TextStyle(
@@ -71,7 +66,7 @@ class _home_adminState extends State<home_admin> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => product()));
+                      MaterialPageRoute(builder: (context) => const product()));
                 },
                 child: Container(
                   child: Card(
@@ -84,8 +79,8 @@ class _home_adminState extends State<home_admin> {
                           width: 150,
                           fit: BoxFit.cover,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(),
+                        const Padding(
+                          padding: EdgeInsets.only(),
                           child: Text(
                             'Analysis', style: TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),),),
@@ -97,7 +92,7 @@ class _home_adminState extends State<home_admin> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => manageuser()));
+                      MaterialPageRoute(builder: (context) => const manageuser()));
                 },
                 child: Container(
                   child: Card(
@@ -110,11 +105,11 @@ class _home_adminState extends State<home_admin> {
                           width: 150,
                           fit: BoxFit.cover,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 2,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 20),
                           child: Text(
                             'Manage user',
                             style: TextStyle(
@@ -129,7 +124,7 @@ class _home_adminState extends State<home_admin> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => managedoctor()));
+                      MaterialPageRoute(builder: (context) => const managedoctor()));
                 },
                 child: Container(
                   child: Card(
@@ -142,8 +137,8 @@ class _home_adminState extends State<home_admin> {
                           width: 150,
                           fit: BoxFit.cover,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10, top: 3),
+                        const Padding(
+                          padding:  EdgeInsets.only(bottom: 10, top: 3),
                           child: Text(
                             'Manage doctor',
                             style: TextStyle(
@@ -159,8 +154,8 @@ class _home_adminState extends State<home_admin> {
               InkWell(
                 onTap: () async {
                   await _auth.signOut();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => manageuser()));
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (context) => const homepage()), (Route route) => false);
 
                 },
                 child: Container(
@@ -172,13 +167,13 @@ class _home_adminState extends State<home_admin> {
                           padding: const EdgeInsets.only(top: 15),
                           child: Image.asset(
                             'images/logout.jpg',
-                            height: 80,
+                            height: 100,
                             width: 100,
                             fit: BoxFit.cover,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 30),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 30),
                           child: Text(
                             'Logout',
                             style: TextStyle(
@@ -194,8 +189,7 @@ class _home_adminState extends State<home_admin> {
               InkWell(
                 onTap: () async {
                   await _auth.signOut();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddNotify()));
+                 
 
                 },
                 child: Container(
@@ -212,8 +206,8 @@ class _home_adminState extends State<home_admin> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 30),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 30),
                           child: Text(
                             'Notifications',
                             style: TextStyle(

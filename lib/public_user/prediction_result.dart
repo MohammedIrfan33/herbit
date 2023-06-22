@@ -62,20 +62,20 @@ class _resultState extends State<result> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 200,),
+              const SizedBox(height: 200,),
               Row(
                 children: [
-                  Text('Name :',style: TextStyle(fontSize: 25),),
-                  SizedBox(width: 30,),
-                  Text(widget.text,style: TextStyle(fontSize: 25,color: Colors.green),),
+                  const Text('Name :',style: TextStyle(fontSize: 25),),
+                  const SizedBox(width: 30,),
+                  Text(widget.text,style: const TextStyle(fontSize: 25,color: Colors.green),),
                 ],
               ),
-              SizedBox(height: 20,),
-              Text("Description :",style: TextStyle(fontSize: 25),),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
+              const Text("Description :",style: TextStyle(fontSize: 25),),
+              const SizedBox(height: 20,),
               Expanded(
                   flex: 3,
-                  child: Text(description,maxLines: 20,style: TextStyle(fontSize: 18,color: Colors.green)))
+                  child: Text(description,maxLines: 20,style: const TextStyle(fontSize: 18,color: Colors.green)))
             ],
           ),
         ),

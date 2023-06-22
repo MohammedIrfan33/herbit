@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:herbit/public_user/disease.dart';
-import 'package:herbit/user/prescription.dart';
 
 class user extends StatefulWidget {
   const user({Key? key}) : super(key: key);
@@ -12,7 +11,7 @@ class user extends StatefulWidget {
 
 class _userState extends State<user> {
   String? dropdownvalue ;
-  TextEditingController symptomControler=new TextEditingController();
+  TextEditingController symptomControler=TextEditingController();
 
   // List of items in our dropdown menu
   var items = [
@@ -46,14 +45,14 @@ class _userState extends State<user> {
       }
 
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator();
+        return const CircularProgressIndicator();
       }
 
       List<String> data = snapshot.data!.docs.map((
           doc) => doc['symptom'] as String).toList();
 
       return DropdownButtonFormField(
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Colors.black,
@@ -64,7 +63,7 @@ class _userState extends State<user> {
                 borderSide: BorderSide(
                   color: Colors.black,
                 ))),
-        hint: Text(
+        hint: const Text(
           'Select Symptoms',
           style: TextStyle(color: Colors.black),
         ),
@@ -85,13 +84,13 @@ class _userState extends State<user> {
               padding: const EdgeInsets.all(19),
               child: TextField(
                 controller: symptomControler,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Retype your symptoms",
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -102,7 +101,7 @@ class _userState extends State<user> {
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => disease(symptomControler.text.trim()),));
                 },
-                child: Text(
+                child: const Text(
                   'Submit ',
                   style: TextStyle(color: Colors.white),
                 ),

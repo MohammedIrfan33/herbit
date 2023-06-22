@@ -1,9 +1,7 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:herbit/public_user/disease.dart';
 import 'package:herbit/public_user/prediction_result.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:herbit/public_user/homepage.dart';
@@ -37,7 +35,7 @@ class _PredictionState extends State<Prediction> {
     final imageStream = http.ByteStream(imageFile!.openRead());
     final imageLength = await imageFile!.length();
 
-    final multipartFile = await http.MultipartFile(
+    final multipartFile = http.MultipartFile(
       'image',imageStream,imageLength,
       filename: _filename ,
       // contentType: MediaType('image', 'jpeg'), // Replace with your desired image type
@@ -85,7 +83,7 @@ class _PredictionState extends State<Prediction> {
                       //  _openGallery(context);
                     },
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   const Padding(padding: EdgeInsets.all(0.0)),
                   GestureDetector(
                     child: const Text("Camera"),
@@ -112,20 +110,20 @@ class _PredictionState extends State<Prediction> {
         leading: IconButton( onPressed: (){ Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => homepage(),
-            )); }, icon:Icon(Icons. arrow_back),),
+              builder: (context) => const homepage(),
+            )); }, icon:const Icon(Icons. arrow_back),),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
+          const Padding(
+            padding: EdgeInsets.only(top: 40),
             child: Text(
               "Select image to upload",
               style: TextStyle(fontSize: 17),
             ),
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Container(
@@ -143,7 +141,7 @@ class _PredictionState extends State<Prediction> {
                         //    _getFromGallery();
                         _showChoiceDialog(context);
                       },
-                      child: Text("Upload Image"),
+                      child: const Text("Upload Image"),
                     ),
                     Container(
                       height: 40.0,
@@ -164,14 +162,14 @@ class _PredictionState extends State<Prediction> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 20,),
+                  const SizedBox(width: 20,),
                   ElevatedButton(
                     onPressed: () {
                       //    _getFromGallery();
                       _showChoiceDialog(context);
 
                     },
-                    child: Text("Upload Image"),
+                    child: const Text("Upload Image"),
                   ),
                 ],
               ),
@@ -224,7 +222,7 @@ class _PredictionState extends State<Prediction> {
               );*/
               submitForm();
             },
-            child: Text("submit",
+            child: const Text("submit",
                 style: TextStyle(
                   color: Colors.white,
                 )),
@@ -248,12 +246,12 @@ class _PredictionState extends State<Prediction> {
 
         imageFile = File(pickedFile.path);
         _filename = basename(imageFile!.path);
-        final _nameWithoutExtension = basenameWithoutExtension(imageFile!.path);
-        final _extenion = extension(imageFile!.path);
-        print("imageFile:${imageFile}");
+        final nameWithoutExtension = basenameWithoutExtension(imageFile!.path);
+        final extenion = extension(imageFile!.path);
+        print("imageFile:$imageFile");
         print(_filename);
-        print(_nameWithoutExtension);
-        print(_extenion);
+        print(nameWithoutExtension);
+        print(extenion);
       });
     }
   }
@@ -269,8 +267,8 @@ class _PredictionState extends State<Prediction> {
       setState(() {
         imageFile = File(pickedFile.path);
         _filename = basename(imageFile!.path).toString();
-        final _nameWithoutExtension = basenameWithoutExtension(imageFile!.path);
-        final _extenion = extension(imageFile!.path);
+        final nameWithoutExtension = basenameWithoutExtension(imageFile!.path);
+        final extenion = extension(imageFile!.path);
       });
     }
   }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:herbit/Login.dart';
+import 'package:herbit/admin/home_admin.dart';
+
 
 class user_details extends StatefulWidget {
   const user_details({Key? key}) : super(key: key);
@@ -28,10 +29,10 @@ class _user_detailsState extends State<user_details> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Login(),
+                        builder: (context) => const home_admin(),
                       ));
                 },
-                icon: Icon(Icons.home))
+                icon: const Icon(Icons.home))
           ],
         ),
         body: Padding(
@@ -51,7 +52,7 @@ class _user_detailsState extends State<user_details> {
                         child: Column(
                           children: [
                             Container(height: 120,
-                              margin: EdgeInsets.all(10),
+                              margin: const EdgeInsets.all(10),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -60,17 +61,17 @@ class _user_detailsState extends State<user_details> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    Text("fullname:" +patientName, style: TextStyle(
+                                    Text("fullname:" +patientName, style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),),
-                                    Text("phone:" +phone, style: TextStyle(
+                                    Text("phone:" +phone, style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),),
                                     /* Text("age:" + documentSnapshot['age'], style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),),*/
 
-                                    SizedBox(height: 10,),
+                                    const SizedBox(height: 10,),
 
                                   ],),
                               ),

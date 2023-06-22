@@ -14,7 +14,7 @@ class pending_details extends StatefulWidget {
 
 class _pending_detailsState extends State<pending_details> {
 
-  void acceptAppointment(String appointmentId) {
+   acceptAppointment(String appointmentId) {
     FirebaseFirestore.instance
         .collection('user_Tb')
         .doc(appointmentId)
@@ -22,10 +22,17 @@ class _pending_detailsState extends State<pending_details> {
       'isAccepted': true,
       'status': 'accepted',
     });
+    FirebaseFirestore.instance
+        .collection('login')
+        .doc(appointmentId)
+        .update({
+      'isAccepted': true,
+      
+    });
   }
 
 // Function to reject an appointment
-  void rejectAppointment(String appointmentId) {
+   rejectAppointment(String appointmentId) {
     FirebaseFirestore.instance
         .collection('user_Tb')
         .doc(appointmentId)
@@ -50,7 +57,7 @@ class _pending_detailsState extends State<pending_details> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.teal[900],
-          title: Text("User Manage"),
+          title: const Text("User Manage"),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(25),
@@ -62,20 +69,21 @@ class _pending_detailsState extends State<pending_details> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => home_admin(),
+                        builder: (context) => const home_admin(),
                       ));
                 },
-                icon: Icon(Icons.home))
+                icon: const Icon(Icons.home))
           ],
         ),
         body:Padding(
             padding: const EdgeInsets.all(8.0),
             child:StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('user_Tb').snapshots(),
+              stream: FirebaseFirestore.instance.collection('user_Tb').where('isAccepted',isEqualTo: false).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final appointments = snapshot.data!.docs;
-                  return ListView.builder(
+                
+                  return  ListView.builder(
                     itemCount: appointments.length,
                     itemBuilder: (context, index) {
                       final appointment = appointments[index].data() as Map<String, dynamic>;
@@ -86,61 +94,64 @@ class _pending_detailsState extends State<pending_details> {
                       final isRejected = appointment['isRejected'];
                       final status = appointment['status'];
 
-                      return Container(
-                        child: Column(
-                          children: [
-                            Container(height: 120,
-                              margin: EdgeInsets.all(10),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.black)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Text("Name:" +patientName, style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),),
-                                    Text("Phone:" +patientPhone, style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),),
+                      return Column(
+                        children: [
+                          Container(height: 120,
+                            margin: const EdgeInsets.all(10),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.black)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Text("Name:" +patientName, style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),),
+                                  Text("Phone:" +patientPhone, style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),),
 
-                                    SizedBox(height: 10,),
-                                    Row(mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width:90,
-                                          height: 40,
-                                          color: Colors.green[900],
-                                          child: TextButton(onPressed: (){acceptAppointment(appointmentId);},
-                                            child: Text(status == 'accepted'?'Accepted':'Accept',style: TextStyle(color: Colors.white),),),
-                                        ),
-                                        SizedBox(width: 10,),
-                                        Container(
-                                          width: 90,
-                                          height: 40,
-                                          color: Colors.green[900],
-                                          child: TextButton(onPressed: (){
-                                            rejectAppointment(appointmentId);
-                                            deleteUser(appointmentId);
+                                  const SizedBox(height: 10,),
+                                  Row(mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width:90,
+                                        height: 40,
+                                        color: Colors.green[900],
+                                        child: TextButton(
+                                          onPressed: () async{
+                                            await acceptAppointment(appointmentId);
+                                            
                                           },
-                                            child: Text(status == 'rejected'?'Rejected':'Reject ',style: TextStyle(color: Colors.white),),),
-                                        ),
-                                      ],
-                                    ),
+                                          child:  Text(status == 'accepted'?'Accepted':'Accept',style: const TextStyle(color: Colors.white),),),
+                                      ),
+                                      const SizedBox(width: 10,),
+                                      Container(
+                                        width: 90,
+                                        height: 40,
+                                        color: Colors.green[900],
+                                        child: TextButton(onPressed: (){
+                                          rejectAppointment(appointmentId);
+                                          deleteUser(appointmentId);
+                                        },
+                                          child: Text(status == 'rejected'?'Rejected':'Reject ',style: const TextStyle(color: Colors.white),),),
+                                      ),
+                                    ],
+                                  ),
 
-                                  ],),
-                              ),
+                                ],),
                             ),
-                          ],),
-                      );
+                          ),
+                        ],);
                     },
                   );
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
-                  return CircularProgressIndicator();
+                 
+                  return const CircularProgressIndicator();
                 }
               },
             )

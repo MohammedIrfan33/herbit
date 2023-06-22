@@ -38,7 +38,7 @@ class _MyPageState extends State<MyPage> {
                         //  _openGallery(context);
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     const Padding(padding: EdgeInsets.all(0.0)),
                    /* GestureDetector(
                       child: const Text("Camera"),
@@ -58,7 +58,7 @@ class _MyPageState extends State<MyPage> {
 
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.green[900],
-          title: Text("ADD IMAGE")
+          title: const Text("ADD IMAGE")
 
       ),
       body:SingleChildScrollView(
@@ -74,9 +74,9 @@ class _MyPageState extends State<MyPage> {
                       //    _getFromGallery();
                       _showChoiceDialog(context);
                     },
-                    child: Text("Upload Image"),
+                    child: const Text("Upload Image"),
                   ),
-                  Container(
+                  const SizedBox(
                     height: 100.0,
                     width: 100,
                   ),
@@ -98,15 +98,15 @@ class _MyPageState extends State<MyPage> {
                     //    _getFromGallery();
                     _showChoiceDialog(context);
                   },
-                  child: Text("Upload Image"),
+                  child: const Text("Upload Image"),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 15,),
+          const SizedBox(height: 15,),
           Container(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
               child: TextField(
 
                 decoration: InputDecoration(
@@ -121,11 +121,11 @@ class _MyPageState extends State<MyPage> {
               ),
             ),
           ),
-          SizedBox(height: 15,),
-          Container(
+          const SizedBox(height: 15,),
+          const SizedBox(
             height: 170,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: TextField(
 
                 decoration: InputDecoration(
@@ -140,7 +140,7 @@ class _MyPageState extends State<MyPage> {
               ),
             ),
           ),
-SizedBox(height: 15,),
+const SizedBox(height: 15,),
     GestureDetector(onTap: (){ Navigator.push(
     context, MaterialPageRoute(builder:(context) => const product()),
     );},
@@ -150,7 +150,7 @@ SizedBox(height: 15,),
             ),                /* ]*/
             height: 50,
             width:120,
-            child: Center(child: Text('submit')),
+            child: const Center(child: Text('submit')),
 
           ),),
         ],

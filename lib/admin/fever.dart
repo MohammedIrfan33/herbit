@@ -12,9 +12,9 @@ class _FeverState extends State<Fever> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
-        title: Text('Fever'),
+        title: const Text('Fever'),
       ),
-          body: Column(
+          body: const Column(
             children: [
               Text('PRESCRIPTION',style: TextStyle(color: Colors.green,fontSize: 24,fontWeight: FontWeight.bold),),
              Text('*Maha herbals'),

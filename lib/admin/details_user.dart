@@ -30,7 +30,7 @@ class _details_userState extends State<details_user> {
                 child: Column(
                   children: [
                     Container(height: 150,
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       width: double.infinity,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -39,11 +39,11 @@ class _details_userState extends State<details_user> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            Text("name:"+name[index],style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                            Text("email:"+email[index],style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                            Text("qualification:"+ age[index],style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                            Text("name:"+name[index],style: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                            Text("email:"+email[index],style: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                            Text("qualification:"+ age[index],style: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
 
-                            SizedBox(height: 10,),
+                            const SizedBox(height: 10,),
                             Row(mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
@@ -51,14 +51,14 @@ class _details_userState extends State<details_user> {
                                   height: 40,
                                   color: Colors.green[900],
                                   child: TextButton(onPressed: (){},
-                                    child: Text('accept',style: TextStyle(color: Colors.white),),),
-                                ),SizedBox(width: 10,),
+                                    child: const Text('accept',style: TextStyle(color: Colors.white),),),
+                                ),const SizedBox(width: 10,),
                                 Container(
                                   width: 100,
                                   height: 40,
                                   color: Colors.green[900],
                                   child: TextButton(onPressed: (){},
-                                    child: Text('Remove',style: TextStyle(color: Colors.white),),),
+                                    child: const Text('Remove',style: TextStyle(color: Colors.white),),),
                                 ),
                               ],
                             ),

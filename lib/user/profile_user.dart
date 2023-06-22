@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:herbit/public_user/user.dart';
 import 'package:herbit/user/home_user.dart';
 import 'package:image_picker/image_picker.dart';
 class profile_user extends StatefulWidget {
@@ -13,9 +12,9 @@ class profile_user extends StatefulWidget {
 }
 
 class _profile_userState extends State<profile_user> {
-  TextEditingController _emailcontroller = TextEditingController();
-  TextEditingController _namecontroller = TextEditingController();
-  TextEditingController _phonecontroller = TextEditingController();
+  final TextEditingController _emailcontroller = TextEditingController();
+  final TextEditingController _namecontroller = TextEditingController();
+  final TextEditingController _phonecontroller = TextEditingController();
   ImagePicker picker = ImagePicker();
   XFile? image;
 
@@ -60,9 +59,9 @@ class _profile_userState extends State<profile_user> {
       'age': age,
       'phone':phn
     }).then((value) {
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>Homeuser()));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>const Homeuser()));
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Data updated successfully'),
         ),
       );
@@ -77,7 +76,7 @@ class _profile_userState extends State<profile_user> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('profile'),
+        title: const Text('profile'),
       ),
       body: Center(
         child: Form(
@@ -87,13 +86,13 @@ class _profile_userState extends State<profile_user> {
             crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding:  EdgeInsets.symmetric(vertical: 10),
+                  padding:  const EdgeInsets.symmetric(vertical: 10),
                   child: InkWell(
                     onTap: ()async{
                       image = await picker.pickImage(
                           source: ImageSource.gallery);
                     },
-                    child: CircleAvatar(
+                    child: const CircleAvatar(
                       radius: 60,
                       backgroundImage: AssetImage('images/Herbal.jpg'),
 
@@ -101,12 +100,12 @@ class _profile_userState extends State<profile_user> {
 
                   ),
                 ),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                   child: TextField(
                     controller: fullnameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
                       prefixIcon: Icon(Icons.person),
@@ -116,13 +115,13 @@ class _profile_userState extends State<profile_user> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                   child: TextFormField(
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please enter Mobile Number';
                       }
-                      RegExp number = new RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
+                      RegExp number = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
                       if (number.hasMatch(value)) {
                         return null;
                       } else {
@@ -131,7 +130,7 @@ class _profile_userState extends State<profile_user> {
                     },
                     keyboardType: TextInputType.number,
                     controller: phnController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
                       prefixIcon: Icon(Icons.phone),
@@ -141,10 +140,10 @@ class _profile_userState extends State<profile_user> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                   child: TextField(
                     controller: ageController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
                       prefixIcon: Icon(Icons.date_range_sharp,),
@@ -155,7 +154,7 @@ class _profile_userState extends State<profile_user> {
                 ),
                 ElevatedButton(onPressed: (){
                   updateUserData(fullnameController.text.trim(), phnController.text.trim(), ageController.text.trim());
-                }, child: Text("Update"))
+                }, child: const Text("Update"))
 
               ],
           ),

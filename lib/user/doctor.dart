@@ -1,10 +1,9 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:herbit/firebase/authentication.dart';
-import 'package:herbit/user/home_user.dart';
-import 'package:intl/intl.dart';
 
-import '../doctor/communication.dart';
+import 'package:intl/intl.dart';
 
 class doctor extends StatefulWidget {
   const doctor({Key? key}) : super(key: key);
@@ -14,14 +13,24 @@ class doctor extends StatefulWidget {
 }
 
 class _doctorState extends State<doctor> {
-
+  TextEditingController datecontroller = TextEditingController();
+  TextEditingController timecontroller = TextEditingController();
+  TextEditingController namecontroller = TextEditingController();
 
   List<String> options = []; // List to store dropdown options
   String selectedOption = ''; // Currently selected option
-
   DateTime selectedDate = DateTime.now();
-
   late String startDate;
+  String? dropdownvalue;
+
+  String? specialication;
+  QueryDocumentSnapshot<Object>? selcteddoctor;
+
+  List<String> spList = ['General', 'Ortho'];
+
+  var docList = [];
+
+  bool isLoading = false;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -32,32 +41,38 @@ class _doctorState extends State<doctor> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        startDate='${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
-        print(startDate);
+        startDate =
+            '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
       });
     }
   }
-  String? dropdownvalue;
 
-  var items = [
-    'doctor 1',
-    'doctor 2',
-    'doctor 3',
-    'doctor 4',
-    'doctor 5',
-  ];
-  TextEditingController datecontroller = TextEditingController();
-  TextEditingController timecontroller = TextEditingController();
-  TextEditingController namecontroller = TextEditingController();
+  getDoctorList(String specialication) async {
+    final data = FirebaseFirestore.instance
+        .collection('doctor')
+        .where('specialisation', isEqualTo: specialication);
+
+    await data.get().then((QuerySnapshot querySnapshot) {
+      docList = querySnapshot.docs;
+      // for (var doc in querySnapshot.docs) {
+      //   var doctorData = doc.data();
+
+      //   docList.add(doctorData);
+      // }
+    });
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     datecontroller.text = "";
     super.initState();
-
   }
+
   String? selectedTime;
 
- /* Future<void> displayTimeDialog() async {
+  /* Future<void> displayTimeDialog() async {
     final TimeOfDay? time =
     await showTimePicker(context: context, initialTime: TimeOfDay.now());
     if (time != null) {
@@ -66,132 +81,141 @@ class _doctorState extends State<doctor> {
       });
     }
   }*/
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController timecontroller =TextEditingController();
+    TextEditingController timecontroller = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('booking'),
+        title: const Text('Booking'),
         backgroundColor: Colors.green[900],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         child: SingleChildScrollView(
-
           child: Column(
             children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(19),
-                    child:StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance.collection('doctor').snapshots(),
-                        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          }
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                height: 50,
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.black)),
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: specialication,
+                  hint: const Text('Specialisation'),
+                  elevation: 0,
+                  underline: const SizedBox(),
+                  dropdownColor: Colors.grey[200],
 
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          }
-                          List<Map<String, dynamic>> data = snapshot.data!.docs.map((doc) {
-                            return {
-                              'id': doc.id,
-                              'qualification': doc['qualification'] as String,
-                            };
-                          }).toList();
-                        /*  List<String> data = snapshot.data!.docs.map((
-                              doc) =>  doc['qualification'] as String).toList();
-*/
-                          return DropdownButtonFormField(
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.black,
-                                    ),
-                                    borderRadius: BorderRadius.zero),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.zero,
-                                    borderSide: BorderSide(
-                                      color: Colors.black,
-                                    ))),
-                            hint: Text(
-                              'Specialisation',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            value: dropdownvalue,
-                            onChanged: (vale) {
-                              setState(() {
-                                dropdownvalue = vale.toString();
-                              });
-                            },
-                            items: data
-                                .map((value) =>
-                                DropdownMenuItem(value: value, child: Text(value as String)))
-                                .toList(),
-                          );
-                        }
-                    ),),
-                ],
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.keyboard_arrow_down),
+
+                  // Array list of items
+                  items: spList.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  // After selecting the desired option,it will
+                  // change button value to selected value
+                  onChanged: (String? newValue) async {
+                    specialication = newValue!;
+                    getDoctorList(specialication!);
+                  },
+                ),
               ),
-              SizedBox(
-                height: 60,
+              const SizedBox(height: 25),
+              if (docList.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  height: 50,
+                  decoration:
+                      BoxDecoration(border: Border.all(color: Colors.black)),
+                  child: DropdownButton(
+                    isExpanded: true,
+                    value: selcteddoctor,
+                    hint: const Text('Select Doctor'),
+                    elevation: 0,
+                    underline: const SizedBox(),
+                    dropdownColor: Colors.grey[200],
+
+                    // Down Arrow Icon
+                    icon: const Icon(Icons.keyboard_arrow_down),
+
+                    // Array list of items
+                    items: docList.map((items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items['fullname']),
+                      );
+                    }).toList(),
+                    // After selecting the desired option,it will
+                    // change button value to selected value
+                    onChanged: (newValue) {
+                      setState(() {
+                        selcteddoctor =
+                            newValue! as QueryDocumentSnapshot<Object>?;
+                      });
+                    },
+                  ),
+                ),
+              const SizedBox(height: 25),
+              TextField(
+                controller: namecontroller,
+                decoration: InputDecoration(
+                  enabledBorder: const OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(0)),
+                  hintText: 'name',
+                  suffixIcon: const Icon(Icons.person),
+                ),
               ),
-      TextField(
-          controller: namecontroller,
-          decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(),
-            focusedBorder:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(0)),
-            hintText: 'name',
-            suffixIcon: Icon(Icons.person),
-          ),),
-              SizedBox(
-                height: 60,
-              ),
+              const SizedBox(height: 25),
               Row(
-
                 children: [
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  Expanded(
                     child: Container(
-                      height: 45,
-                      width:150 ,
-                      margin: const EdgeInsets.all(15.0),
-                      padding: const EdgeInsets.all(3.0),
+                      height: 40,
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black26)
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top:8.0),
-                        child: Text('${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black38
-                          ),),
+                          border: Border.all(color: Colors.black26)),
+                      child: Center(
+                        child: Text(
+                          '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.black38),
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20.0,),
-                  ElevatedButton(
-                    onPressed: () => _selectDate(context),
-                    child: const Text('Consulting date'),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      height: 40,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green[900]),
+                        onPressed: () => _selectDate(context),
+                        child: const Text('Consulting date'),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 60,
-              ),
-           /*  TextField(
+
+              /*  TextField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "consulting time",
                 ),
               ),*/
 
-             /* Text(
+              /* Text(
                 selectedTime != null
                     ? '$selectedTime'
                     : 'Click Below Button To Select Time...',
@@ -210,62 +234,80 @@ class _doctorState extends State<doctor> {
                   onPressed: displayTimeDialog,
                 ),
               ),*/
+              const SizedBox(height: 25),
               TextField(
                 controller: timecontroller,
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(),
-                  focusedBorder:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(0)),
+                  enabledBorder: const OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(0)),
                   hintText: 'consulting Time',
-                  suffixIcon: Icon(Icons.timer),
+                  suffixIcon: const Icon(Icons.timer),
                 ),
                 readOnly: true,
-                onTap:  () async {
-              TimeOfDay? pickedTime = await showTimePicker(
-              context: context, initialTime: TimeOfDay.now());
-              if (pickedTime != null) {
-              DateTime parsedTime = DateFormat.jm()
-                  .parse(pickedTime.format(context).toString());
+                onTap: () async {
+                  TimeOfDay? pickedTime = await showTimePicker(
+                      context: context, initialTime: TimeOfDay.now());
+                  if (pickedTime != null) {
+                    DateTime parsedTime = DateFormat.jm()
+                        .parse(pickedTime.format(context).toString());
 
-              String formattedTime =
-              DateFormat('HH:mm:ss').format(parsedTime);
-              timecontroller.text = formattedTime;
-              } else {
-              print("Time is not selected");
-              }
-              },
+                    String formattedTime =
+                        DateFormat('HH:mm:ss').format(parsedTime);
+                    timecontroller.text = formattedTime;
+                  } else {
+                    print("Time is not selected");
+                  }
+                },
               ),
-              SizedBox(
-                height: 80,
-              ),
+              const SizedBox(height: 60),
               Container(
-
                 height: 50,
                 width: 150,
-                color: Colors.green[900],
+                decoration: BoxDecoration(
+                    color: Colors.green[900],
+                    borderRadius: BorderRadius.circular(10)),
                 child: TextButton(
-                  child: Text(
+                  child: isLoading ?const CircularProgressIndicator() :const Text(
                     'Book now',
                     style: TextStyle(color: Colors.white, fontSize: 22),
                   ),
-                  onPressed: () {
-                    FirebaseFirestore.instance.collection("bookings").add({
-                      "date": startDate,
-                      "time": timecontroller.text,
-                      "doctor":dropdownvalue.toString(),
-                      "name":namecontroller.text,
-                    }).then((value) {
-                      print(value.id);
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Homeuser()));
-                    }).catchError(
-                            (error)=> print("failed to add new booking $error")
-                    );
-                  },
-                ),),  ],
-                ),
-        ),
-            ),
+                  onPressed: () async {
+                    if (timecontroller.text.isEmpty ||
+                        selcteddoctor?.id == '' ||
+                        namecontroller.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Some fields are empty')));
+                    } else {
+                      setState(() {
+                        isLoading = true;
+                      });
 
-      );
+                      await FirebaseFirestore.instance
+                          .collection("bookings")
+                          .add({
+                        "date": startDate,
+                        "time": timecontroller.text,
+                        "doctor": selcteddoctor?.id,
+                        "name": namecontroller.text,
+                      }).then((value) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Booking completed')));
+                      }).catchError((error) =>
+                              print("failed to add new booking $error"));
+
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

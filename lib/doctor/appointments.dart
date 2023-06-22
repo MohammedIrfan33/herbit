@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 
 import '../public_user/homepage.dart';
 
@@ -30,8 +28,8 @@ class _AppointmentsState extends State<Appointments> {
           backgroundColor: Colors.green[900],
           actions: [
             IconButton(onPressed: (){
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => homepage(),));
-            }, icon: Icon(Icons.home))
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const homepage(),));
+            }, icon: const Icon(Icons.home))
           ],
         ),
         body: Padding(
@@ -53,7 +51,7 @@ class _AppointmentsState extends State<Appointments> {
                         child: Column(
                           children: [
                             Container(height: 120,
-                              margin: EdgeInsets.all(10),
+                              margin: const EdgeInsets.all(10),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -62,17 +60,17 @@ class _AppointmentsState extends State<Appointments> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    Text("name:" +patientName, style: TextStyle(
+                                    Text("name:" +patientName, style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),),
-                                    Text("date:" +ddate, style: TextStyle(
+                                    Text("date:" +ddate, style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),),
-                                    Text("time:" + dtime, style: TextStyle(
+                                    Text("time:" + dtime, style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),),
 
-                                    SizedBox(height: 10,),
+                                    const SizedBox(height: 10,),
 
                                   ],),
                               ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:herbit/firebase/authentication.dart';
-import 'package:herbit/user/home_user.dart';
 
-import 'Login.dart';
+import 'login.dart';
 class User_signup extends StatefulWidget {
   const User_signup({Key? key}) : super(key: key);
 
@@ -12,11 +11,11 @@ class User_signup extends StatefulWidget {
 
 class _User_signupState extends State<User_signup> {
   bool passwordVisible = false;
-  TextEditingController _emailcontroller = TextEditingController();
-  TextEditingController _passwordcontroller = TextEditingController();
-  TextEditingController _fullnamecontroller = TextEditingController();
-  TextEditingController _phonecontroller = TextEditingController();
-  TextEditingController _agecontroller = TextEditingController();
+  final TextEditingController _emailcontroller = TextEditingController();
+  final TextEditingController _passwordcontroller = TextEditingController();
+  final TextEditingController _fullnamecontroller = TextEditingController();
+  final TextEditingController _phonecontroller = TextEditingController();
+  final TextEditingController _agecontroller = TextEditingController();
 
   String? validatePhoneNumber(String? phoneNumber) {
     if (phoneNumber == null || phoneNumber.isEmpty) {
@@ -56,7 +55,7 @@ class _User_signupState extends State<User_signup> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
 
@@ -65,7 +64,7 @@ class _User_signupState extends State<User_signup> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
+                    const Text(
                       'Register',
                       style: TextStyle(
                           fontSize: 30,
@@ -78,7 +77,7 @@ class _User_signupState extends State<User_signup> {
                         height: 60,
                         width: 60,
                         color: Colors.white,
-                        child: Image(image: AssetImage('images/leaf.jpg')),
+                        child: const Image(image: AssetImage('images/leaf.jpg')),
                       ),
                     )
                   ],
@@ -92,7 +91,7 @@ class _User_signupState extends State<User_signup> {
                       if (valueMail!.isEmpty) {
                         return 'Please enter Email Id';
                       }
-                      RegExp email = new RegExp(
+                      RegExp email = RegExp(
                           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
                       if (email.hasMatch(valueMail)) {
                         return null;
@@ -102,7 +101,7 @@ class _User_signupState extends State<User_signup> {
                     },
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailcontroller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                       enabledBorder: OutlineInputBorder(
@@ -117,15 +116,16 @@ class _User_signupState extends State<User_signup> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 20),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   child:TextFormField(
                     validator: (value){
                       if(value == null || value.isEmpty){
                         return "Please choose a name to use";
                       }
+                      return null;
                     },
                     controller: _fullnamecontroller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                       enabledBorder: OutlineInputBorder(
@@ -158,7 +158,7 @@ class _User_signupState extends State<User_signup> {
                     },*/
                     keyboardType: TextInputType.number,
                     controller: _phonecontroller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                       enabledBorder: OutlineInputBorder(
@@ -173,7 +173,7 @@ class _User_signupState extends State<User_signup> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
                   child:  TextFormField(
                     validator: (valuePass) {
                       if (valuePass!.isEmpty) {
@@ -187,9 +187,9 @@ class _User_signupState extends State<User_signup> {
                     controller: _passwordcontroller,
                     obscureText: passwordVisible,
                     decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
-                      enabledBorder: OutlineInputBorder(
+                      enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                       // enabledBorder: OutlineInputBorder(
                       //     borderRadius: BorderRadius.circular(50)),
@@ -222,7 +222,7 @@ class _User_signupState extends State<User_signup> {
                 child: Container(
                   child: TextField(
                     controller: _agecontroller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                       enabledBorder: OutlineInputBorder(
@@ -238,11 +238,11 @@ class _User_signupState extends State<User_signup> {
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   width: double.infinity,
-                  margin: EdgeInsets.symmetric(horizontal: 60),
+                  margin: const EdgeInsets.symmetric(horizontal: 60),
                   height: 60,
                   color: Colors.green[900],
                   child: TextButton(
-                    child: Text(
+                    child: const Text(
                       'Sign up',
                       style: TextStyle(color: Colors.white, fontSize: 25),
                     ),
@@ -252,12 +252,12 @@ class _User_signupState extends State<User_signup> {
                           .then((result) {
                         if (result == null) {
                           Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) => Login()));
+                              MaterialPageRoute(builder: (context) => const Login()));
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(
                               result,
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ));
                         }
@@ -284,14 +284,14 @@ class _User_signupState extends State<User_signup> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "you have an account?",
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                         color: Colors.black),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 3,
                   ),
                   TextButton(
@@ -305,7 +305,7 @@ class _User_signupState extends State<User_signup> {
                       child: const Text("Sign in"))
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
             ],

@@ -40,7 +40,7 @@ class _productState extends State<product> {
                       //  _openGallery(context);
                     },
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   const Padding(padding: EdgeInsets.all(0.0)),
                   GestureDetector(
                     child: const Text("Camera"),
@@ -65,14 +65,14 @@ class _productState extends State<product> {
     }
     await showModalBottomSheet<void>(
         isScrollControlled: true,
-        context: context as BuildContext,
+        context: context,
         builder: (BuildContext context) {
           return Padding(
             padding: EdgeInsets.only(
                 top: 20,
                 left: 20,
                 bottom: MediaQuery.of(context).viewInsets.bottom + 20),
-            child: Container(
+            child: SizedBox(
               height: 300,
               child: Expanded(
                 child: Center(
@@ -85,7 +85,7 @@ class _productState extends State<product> {
                         padding: const EdgeInsets.all(16.0),
                         child: TextField(
                           controller: _plantController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black)),
                             enabledBorder: OutlineInputBorder(
@@ -99,7 +99,7 @@ class _productState extends State<product> {
                         padding: const EdgeInsets.all(16.0),
                         child: TextField(
                           controller: _descriptionController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black)),
                             enabledBorder: OutlineInputBorder(
@@ -111,21 +111,19 @@ class _productState extends State<product> {
                       ),
                       ElevatedButton(
                           onPressed: () async {
-                            final String plant_name = _plantController.text;
-                            final String? description =
+                            final String plantName = _plantController.text;
+                            final String description =
                                 _descriptionController.text;
 
-                            if (description != null) {
-                              await _product.doc(documentSnapshot!.id).update({
-                                "plant_name": plant_name,
-                                "description": description
-                              });
-                              _plantController.text = '';
-                              _descriptionController.text = '';
-                            }
+                            await _product.doc(documentSnapshot!.id).update({
+                              "plant_name": plantName,
+                              "description": description
+                            });
+                            _plantController.text = '';
+                            _descriptionController.text = '';
                             Navigator.pop(context);
                           },
-                          child: Text('update')),
+                          child: const Text('update')),
                     ],
                   ),
                 ),
@@ -150,15 +148,15 @@ class _productState extends State<product> {
                 left: 20,
                 right: 20,
                 bottom: MediaQuery.of(context).viewInsets.bottom + 20),
-            child: Container(
+            child: SizedBox(
               height: 300,
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    SizedBox(height: 10),
-                    Text('Add Analysis'),
+                    const SizedBox(height: 10),
+                    const Text('Add Analysis'),
                     Container(
                       /* decoration: BoxDecoration(
                       image: DecorationImage(
@@ -174,7 +172,7 @@ class _productState extends State<product> {
                                       //    _getFromGallery();
                                       _showChoiceDialog(context);
                                     },
-                                    child: Text("Upload Image"),
+                                    child: const Text("Upload Image"),
                                   ),
                                   Container(
                                     height: 40.0,
@@ -201,7 +199,7 @@ class _productState extends State<product> {
                                     _showChoiceDialog(context);
                                     Navigator.pop(context);
                                   },
-                                  child: Text("Upload Image"),
+                                  child: const Text("Upload Image"),
                                 ),
                               ],
                             ),
@@ -211,7 +209,7 @@ class _productState extends State<product> {
                       padding: const EdgeInsets.all(5.0),
                       child: TextField(
                         controller: _plantController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                           enabledBorder: OutlineInputBorder(
@@ -225,7 +223,7 @@ class _productState extends State<product> {
                       padding: const EdgeInsets.all(5.0),
                       child: TextField(
                         controller: _descriptionController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                           enabledBorder: OutlineInputBorder(
@@ -238,21 +236,19 @@ class _productState extends State<product> {
                     ElevatedButton(
                         onPressed: () async {
 
-                          final String plant_name = _plantController.text;
-                          final String? description =
+                          final String plantName = _plantController.text;
+                          final String description =
                               _descriptionController.text;
-                          final String? image = imageUrl;
-                          if (description != null) {
-                            await _product.add({
-                              "plant_name": plant_name,
-                              "description": description,
-                              "image": image
-                            });
-                            _plantController.text = '';
-                            _descriptionController.text = '';
-                          }
+                          final String image = imageUrl;
+                          await _product.add({
+                            "plant_name": plantName,
+                            "description": description,
+                            "image": image
+                          });
+                          _plantController.text = '';
+                          _descriptionController.text = '';
                         },
-                        child: Text('submit')),
+                        child: const Text('submit')),
                   ],
                 ),
               ),
@@ -264,7 +260,7 @@ class _productState extends State<product> {
   Future<void> _delete(String productId) async {
     await _product.doc(productId).delete();
 
-    ScaffoldMessenger.of(context as BuildContext).showSnackBar(const SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('You have successfully deleted a product')));
   }
 
@@ -274,7 +270,7 @@ class _productState extends State<product> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.green[900],
-          title: Text(
+          title: const Text(
             'HERBAL',
             style: TextStyle(color: Colors.white),
           ),
@@ -294,37 +290,37 @@ class _productState extends State<product> {
                     itemBuilder: (context, index) {
                       final DocumentSnapshot documentSnapshot =
                           streamSnapshot.data!.docs[index];
-                      print("snap ${documentSnapshot}");
-                      return Container(
-                        height: 50,
-                        width: 150,
-                        margin: const EdgeInsets.all(10),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(documentSnapshot['image']),
+                      print("snap $documentSnapshot");
+                      return ListTile(
+                        leading: Image.network(
+                          documentSnapshot['image'],
+                          width: 60,
+                          height: 80,
+                          fit: BoxFit.cover,
                           ),
-                          title: Text(documentSnapshot['plant_name']),
-                          subtitle: Text(documentSnapshot['description']),
-                          trailing: SizedBox(
-                            width: 100,
-                            child: Row(
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () => setState(() {
-                                    _update(documentSnapshot);
-                                  }),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () =>setState(() {
-                                    _delete(documentSnapshot.id);
-                                  })
-                                )
-                              ],
-                            ),
+                         
+                        
+                        
+                        title: Text(documentSnapshot['plant_name']),
+                        subtitle: Text(documentSnapshot['description']),
+                        trailing: SizedBox(
+                          width: 100,
+                          child: Row(
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () => setState(() {
+                                  _update(documentSnapshot);
+                                }),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () =>setState(() {
+                                  _delete(documentSnapshot.id);
+                                })
+                              )
+                            ],
                           ),
                         ),
                       );
@@ -355,7 +351,7 @@ class _productState extends State<product> {
     Reference referenceImageToUpload = referenceDirImages.child(uniquename);
 
     try {
-      await referenceImageToUpload.putFile(File(file!.path));
+      referenceImageToUpload.putFile(File(file!.path));
       imageUrl = await referenceImageToUpload.getDownloadURL();
     } catch (error) {}
   }
@@ -377,7 +373,7 @@ class _productState extends State<product> {
     Reference referenceImageToUpload = referenceDirImages.child(uniquename);
 
     try {
-      await referenceImageToUpload.putFile(File(file!.path));
+      referenceImageToUpload.putFile(File(file!.path));
       imageUrl = await referenceImageToUpload.getDownloadURL();
     } catch (error) {}
 

@@ -31,7 +31,7 @@ class _HomeuserState extends State<Homeuser> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => chat()));
+                      MaterialPageRoute(builder: (context) => const chat()));
                 },
                 child: Container(
                   child: Card(
@@ -47,8 +47,8 @@ class _HomeuserState extends State<Homeuser> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 30),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 30),
                           child: Text(
                             'chat',
                             style: TextStyle(
@@ -63,7 +63,7 @@ class _HomeuserState extends State<Homeuser> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => chatbot()));
+                      MaterialPageRoute(builder: (context) => const chatbot()));
                 },
                 child: Container(
                   child: Card(
@@ -76,8 +76,8 @@ class _HomeuserState extends State<Homeuser> {
                           width: 150,
                           fit: BoxFit.cover,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(),
+                        const Padding(
+                          padding: EdgeInsets.only(),
                           child: Text(
                             'chatbot',style: TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),),),
@@ -89,7 +89,7 @@ class _HomeuserState extends State<Homeuser> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => profile_user()));
+                      MaterialPageRoute(builder: (context) => const profile_user()));
                 },
                 child: Container(
                   child: Card(
@@ -102,11 +102,11 @@ class _HomeuserState extends State<Homeuser> {
                           width: 100,
                           fit: BoxFit.cover,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 2,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 20),
                           child: Text(
                             'profile user',
                             style: TextStyle(
@@ -121,7 +121,7 @@ class _HomeuserState extends State<Homeuser> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => doctor()));
+                      MaterialPageRoute(builder: (context) => const doctor()));
                 },
                 child: Container(
                   child: Card(
@@ -134,8 +134,8 @@ class _HomeuserState extends State<Homeuser> {
                           width: 100,
                           fit: BoxFit.cover,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10,top: 3),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 10,top: 3),
                           child: Text(
                             'consulting',
                             style: TextStyle(
@@ -150,7 +150,7 @@ class _HomeuserState extends State<Homeuser> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Login()));
+                      MaterialPageRoute(builder: (context) => const Login()));
                 },
                 child: Container(
                   child: Card(
@@ -163,8 +163,8 @@ class _HomeuserState extends State<Homeuser> {
                           width: 100,
                           fit: BoxFit.cover,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10,top: 3),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 10,top: 3),
                           child: Text(
                             'Logout',
                             style: TextStyle(

@@ -15,7 +15,7 @@ class _view_certificateState extends State<view_certificate> {
         Container(
           height: 300,
           width: 200,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               image: DecorationImage(image: AssetImage('images/doctor.jpg'),/*fit: BoxFit.fill*/)
           ),
         ),

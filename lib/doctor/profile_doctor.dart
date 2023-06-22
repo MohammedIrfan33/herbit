@@ -52,9 +52,9 @@ class _profile_doctorState extends State<profile_doctor> {
       'phone': phn,
       'qualification':quali
     }).then((value) {
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>home_doctor()));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>const home_doctor()));
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Data updated successfully'),
         ),
       );
@@ -89,25 +89,25 @@ class _profile_doctorState extends State<profile_doctor> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('profile'),
+        title: const Text('profile'),
       ),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
+            const Padding(
               padding:  EdgeInsets.symmetric(vertical: 10),
               child: CircleAvatar(
                 radius: 60,
                 backgroundImage: AssetImage('images/Herbal.jpg'),
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
               child: TextField(
                 controller: fullnameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   prefixIcon: Icon(Icons.person),
@@ -117,10 +117,10 @@ class _profile_doctorState extends State<profile_doctor> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
               child: TextField(
                 controller: phnController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   prefixIcon: Icon(Icons.email),
@@ -130,10 +130,10 @@ class _profile_doctorState extends State<profile_doctor> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
               child: TextField(
                 controller: qlController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   prefixIcon: Icon(Icons.medical_information,),
@@ -144,7 +144,7 @@ class _profile_doctorState extends State<profile_doctor> {
             ),
             ElevatedButton(onPressed: (){
               updateUserData(fullnameController.text.trim(), phnController.text.trim(), qlController.text.trim());
-            }, child: Text("Update"))
+            }, child: const Text("Update"))
 
           ],
         ),

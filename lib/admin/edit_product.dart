@@ -35,7 +35,7 @@ class _edit_productState extends State<edit_product> {
                         //  _openGallery(context);
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     const Padding(padding: EdgeInsets.all(0.0)),
                     /* GestureDetector(
                       child: const Text("Camera"),
@@ -55,7 +55,7 @@ class _edit_productState extends State<edit_product> {
 
     return Scaffold(
         appBar: AppBar(backgroundColor: Colors.green[900],
-            title: Text("edit IMAGE")
+            title: const Text("edit IMAGE")
 
         ),
         body:SingleChildScrollView(
@@ -71,9 +71,9 @@ class _edit_productState extends State<edit_product> {
                           //    _getFromGallery();
                           _showChoiceDialog(context);
                         },
-                        child: Text("Upload Image"),
+                        child: const Text("Upload Image"),
                       ),
-                      Container(
+                      const SizedBox(
                         height: 100.0,
                         width: 100,
                       ),
@@ -95,15 +95,15 @@ class _edit_productState extends State<edit_product> {
                         //    _getFromGallery();
                         _showChoiceDialog(context);
                       },
-                      child: Text("Upload Image"),
+                      child: const Text("Upload Image"),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
               Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: TextField(
 
                     decoration: InputDecoration(
@@ -118,10 +118,10 @@ class _edit_productState extends State<edit_product> {
                   ),
                 ),
               ),
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
               Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: TextField(
 
                     decoration: InputDecoration(
@@ -135,7 +135,7 @@ class _edit_productState extends State<edit_product> {
                   ),
                 ),
               ),
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
               GestureDetector(onTap: (){ Navigator.push(
                 context, MaterialPageRoute(builder:(context) => const product()),
               );},
@@ -145,7 +145,7 @@ class _edit_productState extends State<edit_product> {
                   ),                /* ]*/
                   height: 50,
                   width:120,
-                  child: Center(child: Text('submit')),
+                  child: const Center(child: Text('submit')),
 
                 ),),
             ],

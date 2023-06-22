@@ -18,14 +18,14 @@ class _welcomeState extends State<welcome> {
    child:     Container(
         height: 900,
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             image: DecorationImage(image: AssetImage('aleovera/.jpg'),fit: BoxFit.fill)
         ),),
       ), TextButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => homepage(),));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const homepage(),));
             },
-            child: Text(
+            child: const Text(
               'Submit ',
               style: TextStyle(color: Colors.white),
             ),

@@ -4,8 +4,7 @@ import 'package:herbit/register_doctor.dart';
 import 'package:herbit/signup_user.dart';
 
 
-import 'Login.dart';
-import 'Signup_Doctor.dart';
+import 'login.dart';
 
 
 class MainDash extends StatelessWidget {
@@ -40,9 +39,9 @@ class _MainDashBState extends State<MainDashB> {
   Card makeDashboardItem(String title, IconData icon) {
     return Card(
         elevation: 1.0,
-        margin: EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         child: Container(
-          decoration: BoxDecoration(color: Color.fromRGBO(220, 220, 220, 1.0)),
+          decoration: const BoxDecoration(color: Color.fromRGBO(220, 220, 220, 1.0)),
           child:  InkWell(
             onTap: () {},
             child: Column(
@@ -50,18 +49,18 @@ class _MainDashBState extends State<MainDashB> {
               mainAxisSize: MainAxisSize.min,
               verticalDirection: VerticalDirection.down,
               children: <Widget>[
-                SizedBox(height: 50.0),
+                const SizedBox(height: 50.0),
                 Center(
                     child: Icon(
                       icon,
                       size: 40.0,
                       color: Colors.black,
                     )),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Center(
                   child:  Text(title,
                       style:
-                      TextStyle(fontSize: 18.0, color: Colors.black)),
+                      const TextStyle(fontSize: 18.0, color: Colors.black)),
                 )
               ],
             ),
@@ -75,17 +74,17 @@ class _MainDashBState extends State<MainDashB> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text( "REGISTRATION",
+        title: const Text( "REGISTRATION",
           style:TextStyle(
               fontSize:25,
               fontWeight:FontWeight.bold,
               color:Colors.white
           ),),
         leading:IconButton(
-          icon:Icon(Icons.arrow_back),
+          icon:const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) =>  Login()));
+                MaterialPageRoute(builder: (context) =>  const Login()));
           },
         ),
         /// elevation: .1,
@@ -105,7 +104,7 @@ class _MainDashBState extends State<MainDashB> {
                       fontWeight:FontWeight.bold,
                       color:Colors.black54
                   ),),
-              ),*/ SizedBox(
+              ),*/ const SizedBox(
                 height: 40,
               ),
               //  GridView.count(
@@ -121,21 +120,21 @@ class _MainDashBState extends State<MainDashB> {
               GridView(
 
                 shrinkWrap: true,
-                padding: EdgeInsets.all(80.0),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                padding: const EdgeInsets.all(80.0),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 1,mainAxisSpacing:15,crossAxisSpacing: 10),
 
                 children: [
                   InkWell(
                     onTap: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>User_signup()));
+                      Navigator.push(context,MaterialPageRoute(builder: (context)=>const User_signup()));
                     },
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color:Colors.greenAccent[100],
                       ),
-                      child:Column(
+                      child:const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.person,size:50,color:Colors.black),
@@ -150,14 +149,14 @@ class _MainDashBState extends State<MainDashB> {
 
                   InkWell(
                     onTap: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>register_doctor()));
+                      Navigator.push(context,MaterialPageRoute(builder: (context)=>const register_doctor()));
                     },
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color:Colors.greenAccent[100],
                       ),
-                      child:Column(
+                      child:const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.medical_information_outlined,size:50,color:Colors.black),

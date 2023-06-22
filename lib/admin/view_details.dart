@@ -31,12 +31,12 @@ class _viewState extends State<view> {
 
             width:200,
 
-            child: Center(child: Text('fever')),
+            child: const Center(child: Text('fever')),
 
 
 
           ),),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
 
           Container(
 
@@ -50,11 +50,11 @@ class _viewState extends State<view> {
 
             width:200,
 
-            child: Center(child: Text('head ache')),
+            child: const Center(child: Text('head ache')),
 
 
 
-          ),SizedBox(height: 20,),
+          ),const SizedBox(height: 20,),
           Container(
 
             height: 50,
@@ -67,11 +67,11 @@ class _viewState extends State<view> {
 
             width:200,
 
-            child: Center(child: Text('diabetes')),
+            child: const Center(child: Text('diabetes')),
 
 
 
-          ),SizedBox(height: 20,),
+          ),const SizedBox(height: 20,),
 
           Container(
 
@@ -85,11 +85,11 @@ class _viewState extends State<view> {
 
             width:200,
 
-            child: Center(child: Text('obesity')),
+            child: const Center(child: Text('obesity')),
 
 
 
-          ),SizedBox(height: 20,),
+          ),const SizedBox(height: 20,),
           Container(
 
             height: 50,
@@ -102,11 +102,11 @@ class _viewState extends State<view> {
 
             width:200,
 
-            child: Center(child: Text('dandruff')),
+            child: const Center(child: Text('dandruff')),
 
 
 
-          ),SizedBox(height: 20,),
+          ),const SizedBox(height: 20,),
 ],),
         ),
       ),

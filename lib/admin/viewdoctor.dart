@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../Login.dart';
+
+
+
+
 class viewdoctor extends StatefulWidget {
   const viewdoctor({Key? key}) : super(key: key);
 
@@ -40,37 +43,35 @@ class _viewdoctorState extends State<viewdoctor> {
           itemCount: streamSnapshot.data!.docs.length,
           itemBuilder: (context, index) {
             final DocumentSnapshot documentSnapshot=streamSnapshot.data!.docs[index];
-            print("snap ${documentSnapshot}");
-            return Container(
-              child: Column(
-                children: [
-                  Container(height: 120,
-                    margin: EdgeInsets.all(10),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.black)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Text("name:" +documentSnapshot['fullname'], style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),),
-                          Text("phone:" +documentSnapshot['phone'], style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),),
-                          Text("qualification:" + documentSnapshot['qualification'], style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),),
+            
+            return  documentSnapshot['isAccepted'] ==  true ?Column(
+              children: [
+                Container(height: 120,
+                  margin: const EdgeInsets.all(10),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text("name:" +documentSnapshot['fullname'], style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),),
+                        Text("phone:" +documentSnapshot['phone'], style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),),
+                        Text("qualification:" + documentSnapshot['qualification'], style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),),
 
-                          SizedBox(height: 10,),
+                        const SizedBox(height: 10,),
 
-                        ],),
-                    ),
+                      ],),
                   ),
-                ],),
-            );
+                ),
+              ],) : const SizedBox.shrink();
           },);
       }return const Center(
         child: CircularProgressIndicator(),

@@ -5,39 +5,42 @@ import 'package:intl/intl.dart';
 
 import 'doctor.dart';
 import 'home_user.dart';
-import '../public_user/homepage.dart';
 
 class prescription extends StatefulWidget {
   final String sym;
+  final List<String> selectedSymptomList;
 
-
-  prescription(this.sym);
+  const prescription({
+    required this.sym,
+    required this.selectedSymptomList,
+  });
 
   @override
   State<prescription> createState() => _prescriptionState();
 }
 
 class _prescriptionState extends State<prescription> {
-  String userId='';
+  String userId = '';
   User? user;
-  String age='';
-  String name='';
-  String description='';
+  String age = '';
+  String name = '';
+  String description = '';
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
   void fetchUserData() {
     user = FirebaseAuth.instance.currentUser;
     userId = user!.uid;
-    FirebaseFirestore.instance.collection('user_Tb').doc(userId).get().then((DocumentSnapshot documentSnapshot) {
+    FirebaseFirestore.instance
+        .collection('user_Tb')
+        .doc(userId)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
-        setState(() {
-          name = data['fullname'] as String;
-          age = data['age'] as String;
-          print("name$name");
-          print(age);
-        });
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
 
-
+        name = data['fullname'] as String;
+        age = data['age'] as String;
       } else {
         print('User document does not exist');
       }
@@ -45,49 +48,97 @@ class _prescriptionState extends State<prescription> {
       print('Failed to fetch user data: $error');
     });
   }
+
   List<Map<String, dynamic>> allData = [];
   List<Map<String, dynamic>> filteredData = [];
 
-  String datas='';
+  String datas = '';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fetchUserData();
-    datas=widget.sym;
+    datas = widget.sym;
+
+    getAgeWithMedicine(widget.selectedSymptomList);
     fetchData();
   }
 
   Future<void> fetchData() async {
     // Retrieve data from Firebase collection
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('symptom').get();
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('symptom').get();
 
     // Store retrieved data in allData variable
-    allData = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    allData =
+        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
 
     // Apply filter to the data (e.g., filter by a specific field)
-    filteredData = allData.where((data) => data['symptom'] == widget.sym).toList();
+    filteredData =
+        allData.where((data) => data['symptom'] == widget.sym).toList();
     print("medicine$filteredData");
 
     // Refresh the UI
     setState(() {});
   }
+
+  List? treatmentList;
+
+  getAgeWithMedicine(List<String> selectedSymptomList) async {
+    final data = FirebaseFirestore.instance.collection('symptom');
+
+    await data.get().then((QuerySnapshot querySnapshot) {
+      var allData = querySnapshot.docs
+          .where((element) {
+            var symptom = element.get('symptom');
+            return selectedSymptomList
+                .any((selectedSymptom) => symptom == selectedSymptom);
+          })
+          .map((docSnapshot) => docSnapshot.data())
+          .toList();
+     
+    });
+
+
+
+    List<Map<String, dynamc>> filteredData = allData.where((item) {
+  if (item.containsKey('treatment')) {
+    List<Map<String, dynamic>> treatments =
+        List<Map<String, dynamic>>.from(item['treatment']);
+    treatments = treatments.where((treatment) => treatment['age'] == age).toList();
+    if (treatments.isNotEmpty) {
+      item['treatment'] = treatments;
+      return true;
+    }
+  }
+  return false;
+}).toList();
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
         actions: [
-          IconButton(onPressed: (){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Homeuser(),));
-          }, icon: Icon(Icons.home))
+          IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Homeuser(),
+                    ));
+              },
+              icon: const Icon(Icons.home))
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,57 +146,62 @@ class _prescriptionState extends State<prescription> {
               Align(
                   alignment: Alignment.topRight,
                   child: Text(
-                    'Date:${formattedDate}',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    'Date:$formattedDate',
+                    style: const TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.bold),
                   )),
               Padding(
                 padding: const EdgeInsets.only(top: 25),
                 child: Row(
                   children: [
-                    Text(
+                    const Text(
                       'Name',
-                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
-                    Text(
+                    const Text(
                       ':',
-                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
                       name.toUpperCase(),
-                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'Age',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 22,
                   ),
-                  Text(
+                  const Text(
                     ':',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(
                     age,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Text(
+              const Text(
                 'Symptoms',
                 style: TextStyle(
                   fontSize: 25,
@@ -153,14 +209,15 @@ class _prescriptionState extends State<prescription> {
                   decoration: TextDecoration.underline,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Text(
-                '* '+widget.sym.toUpperCase(),
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                '* ${widget.sym.toUpperCase()}',
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
               ),
-            /*  Text(
+              /*  Text(
                 '* headache',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
               ),
@@ -168,10 +225,10 @@ class _prescriptionState extends State<prescription> {
                 '* vomiting',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
               ),*/
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Text(
+              const Text(
                 'Medicines',
                 style: TextStyle(
                   fontSize: 25,
@@ -179,12 +236,12 @@ class _prescriptionState extends State<prescription> {
                   decoration: TextDecoration.underline,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: filteredData.length,
                 itemBuilder: (context, index) {
                   // Display the filtered data
@@ -193,28 +250,38 @@ class _prescriptionState extends State<prescription> {
 
                   return ListTile(
                       title: RichText(
-                        text: TextSpan(
-                          children: textParts.map((text) {
-                            return TextSpan(
-                              text: text.trim(),
-                              style: TextStyle(fontSize:20,color: Colors.black),
-                            );
-                          }).toList(),
-                        ),
-                      ) /*Text(filteredData[index]['medicine'].toUpperCase())*/
-                  );
-                  },
+                    text: TextSpan(
+                      children: textParts.map((text) {
+                        return TextSpan(
+                          text: text.trim(),
+                          style: const TextStyle(
+                              fontSize: 20, color: Colors.black),
+                        );
+                      }).toList(),
+                    ),
+                  ) /*Text(filteredData[index]['medicine'].toUpperCase())*/
+                      );
+                },
               ),
-              SizedBox(height: 100,),
+              const SizedBox(
+                height: 100,
+              ),
               Container(
                 width: double.infinity,
-                margin: EdgeInsets.symmetric(horizontal: 70),
+                margin: const EdgeInsets.symmetric(horizontal: 70),
                 height: 60,
                 color: Colors.green[900],
                 child: TextButton(
-                  child: Text('Consulting',style: TextStyle(color: Colors.white,fontSize: 25),),
-                  onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => doctor(),));
+                  child: const Text(
+                    'Consulting',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const doctor(),
+                        ));
                   },
                 ),
               ),

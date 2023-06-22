@@ -20,8 +20,8 @@ class _doctor_detailsState extends State<doctor_details> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              Padding(
-                padding: const EdgeInsets.only(top: 70),
+              const Padding(
+                padding: EdgeInsets.only(top: 70),
                 child: Row(
                   children: [
                     Text(
@@ -44,10 +44,10 @@ class _doctor_detailsState extends State<doctor_details> {
                   ],
                 ),
               ),
-              Row(
+              const Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(1.0),
+                    padding: EdgeInsets.all(1.0),
                     child: Text(
                       'Age',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -69,7 +69,7 @@ class _doctor_detailsState extends State<doctor_details> {
                   ),
                 ],
               ),
-              Row(
+              const Row(
                 children: [
                   Text(
                     'email',
@@ -91,7 +91,7 @@ class _doctor_detailsState extends State<doctor_details> {
                   ),
                 ],
               ),
-              Row(
+              const Row(
                 children: [
                   Text(
                     'qualification',
@@ -113,7 +113,7 @@ class _doctor_detailsState extends State<doctor_details> {
                   ),
                 ],
               ),
-              Row(
+              const Row(
                 children: [
                   Text(
                     'email',
@@ -143,7 +143,7 @@ class _doctor_detailsState extends State<doctor_details> {
                   color: Colors.green[900],
                   child: TextButton(onPressed: (){Navigator.push(
                       context, MaterialPageRoute(builder:(context) => const view_certificate()),);},
-                    child: Text('view',style: TextStyle(color: Colors.white),),),
+                    child: const Text('view',style: TextStyle(color: Colors.white),),),
                 ),
               ),
 
@@ -157,15 +157,15 @@ class _doctor_detailsState extends State<doctor_details> {
                       height: 40,
                       color: Colors.green[900],
                       child: TextButton(onPressed: (){},
-                        child: Text('Remove',style: TextStyle(color: Colors.white),),),
+                        child: const Text('Remove',style: TextStyle(color: Colors.white),),),
                     ),
-                    SizedBox(width: 10,),
+                    const SizedBox(width: 10,),
                     Container(
                       width: 100,
                       height: 40,
                       color: Colors.green[900],
                       child: TextButton(onPressed: (){},
-                        child: Text('Accept',style: TextStyle(color: Colors.white),),),
+                        child: const Text('Accept',style: TextStyle(color: Colors.white),),),
                     ),
 
 

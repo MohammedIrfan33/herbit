@@ -22,24 +22,35 @@ class _pending_doctorState extends State<pending_doctor> {
       'isAccepted': true,
       'status': 'accepted',
     });
+    FirebaseFirestore.instance
+        .collection('login')
+        .doc(appointmentId)
+        .update({
+      'isAccepted': true,
+      'status': 'accepted',
+    });
   }
 
 // Function to reject an appointment
-  void rejectAppointment(String appointmentId) {
-    FirebaseFirestore.instance
-        .collection('doctor')
-        .doc(appointmentId)
-        .update({
-      'isRejected': true,
-      'status': 'rejected',
-    });
+  void rejectAppointment(String appointmentId) async{
+    
+
+    await FirebaseFirestore.instance
+          .collection('doctor')
+          .doc(appointmentId)
+          .delete();
+      await FirebaseFirestore.instance
+          .collection('login')
+          .doc(appointmentId)
+          .delete();
+
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.teal[900],
-          title: Text("Doctor Manage"),
+          title: const Text("Doctor Manage"),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(25),
@@ -51,10 +62,10 @@ class _pending_doctorState extends State<pending_doctor> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => home_admin(),
+                        builder: (context) => const home_admin(),
                       ));
                 },
-                icon: Icon(Icons.home))
+                icon: const Icon(Icons.home))
           ],
         ),
         body:Padding(
@@ -74,12 +85,13 @@ class _pending_doctorState extends State<pending_doctor> {
                       final isAccepted = appointment['isAccepted'];
                       final isRejected = appointment['isRejected'];
                       final status = appointment['status'];
+                      final viewCertificate = appointment['image'];
 
-                      return Container(
+                      return isAccepted == false ? Container(
                         child: Column(
                           children: [
-                            Container(height: 120,
-                              margin: EdgeInsets.all(10),
+                            Container(
+                              margin: const EdgeInsets.all(10),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -88,14 +100,20 @@ class _pending_doctorState extends State<pending_doctor> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    Text("Name:" +patientName, style: TextStyle(
+                                    Text("Name:" +patientName, style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),),
-                                    Text("Phone:" +patientPhone, style: TextStyle(
+                                    Text("Phone:" +patientPhone, style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),),
 
-                                    SizedBox(height: 10,),
+                                    Image.network(
+                                      viewCertificate,
+                                      height:100,
+
+                                    ),
+                                    
+                                    const SizedBox(height: 10,),
                                     Row(mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Container(
@@ -103,9 +121,9 @@ class _pending_doctorState extends State<pending_doctor> {
                                           height: 40,
                                           color: Colors.green[900],
                                           child: TextButton(onPressed: (){acceptAppointment(appointmentId);},
-                                            child: Text(status == 'accepted'?'Accepted':'Accept',style: TextStyle(color: Colors.white),),),
+                                            child: Text(status == 'accepted'?'Accepted':'Accept',style: const TextStyle(color: Colors.white),),),
                                         ),
-                                        SizedBox(width: 10,),
+                                        const SizedBox(width: 10,),
                                         Container(
                                           width: 90,
                                           height: 40,
@@ -113,7 +131,21 @@ class _pending_doctorState extends State<pending_doctor> {
                                           child: TextButton(onPressed: (){
                                             rejectAppointment(appointmentId);
                                           },
-                                            child: Text(status == 'rejected'?'Rejected':'Reject ',style: TextStyle(color: Colors.white),),),
+                                            child: Text(status == 'rejected'?'Rejected':'Reject ',style: const TextStyle(color: Colors.white),),),
+                                        ),
+                                         const SizedBox(width: 10,),
+                                        Container(
+                                          width: 90,
+                                          height: 40,
+                                          color: Colors.green[900],
+                                          child: TextButton(onPressed: (){
+                                            showDialog(context: context, builder: (context) => Image.network(
+                                      viewCertificate,
+                                      height:100
+
+                                    ),);
+                                          },
+                                            child: const Text('certificate ',style: TextStyle(color: Colors.white),),),
                                         ),
                                       ],
                                     ),
@@ -122,13 +154,13 @@ class _pending_doctorState extends State<pending_doctor> {
                               ),
                             ),
                           ],),
-                      );
+                      ) :  const SizedBox.shrink();
                     },
                   );
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
               },
             )

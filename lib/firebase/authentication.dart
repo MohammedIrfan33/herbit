@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 class AuthenticationHelper {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -24,11 +23,12 @@ class AuthenticationHelper {
         'isRejected':true,
         'status':'',
       });
-      print("user data${user}");
-      await _db.collection('login').doc(user!.uid).set({
+      print("user data$user");
+      await _db.collection('login').doc(user.uid).set({
         'email': email,
         'password': password,
         'role':"user",
+        'isAccepted': false
       });
    //   sendNotificationToAdmin(result.user!.uid);
 
@@ -61,7 +61,7 @@ class AuthenticationHelper {
       print('Error sending notification to admin: $e');
     }
   }
- */ Future<String?> Signupdoc({required String email, required String password,required String name,required String qualification,required String phone,required String image}) async {
+ */ Future<String?> Signupdoc({required String email, required String password,required String name,required String qualification,required String phone,required String image,required String specialisation}) async {
     try {
       UserCredential result= await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -76,13 +76,15 @@ class AuthenticationHelper {
         'isAccepted':false,
         'isRejected':true,
         'status':'',
+        'specialisation': specialisation
 
       });
-      print("user data${user}");
-      await _db.collection('login').doc(user!.uid).set({
+     
+      await _db.collection('login').doc(user.uid).set({
         'email': email,
         'password': password,
         'role':"doctor",
+        'isAccepted':false
       });
       return null;
     } on FirebaseAuthException catch (e) {
@@ -101,11 +103,11 @@ class AuthenticationHelper {
         'password': password,
 
       });
-      print("user data${user}");
-      await _db.collection('login').doc(user!.uid).set({
+      print("user data$user");
+      await _db.collection('login').doc(user.uid).set({
         'email': email,
         'password': password,
-        'role':"doctor",
+        'role':"admin",
       });
       return null;
     } on FirebaseAuthException catch (e) {
@@ -124,7 +126,7 @@ class AuthenticationHelper {
 
        // 'role':qualification,
       });
-      print("user data${user}");
+      print("user data$user");
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message;

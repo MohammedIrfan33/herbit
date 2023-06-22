@@ -31,7 +31,7 @@ class _chatbot_doctorState extends State<chatbot_doctor> {
               child: Align(
                 alignment: Alignment.topRight,
 
-                child:Container(
+                child:SizedBox(
 
                   width: 100,
                   height:60,
@@ -50,7 +50,7 @@ class _chatbot_doctorState extends State<chatbot_doctor> {
                 child: Align(
                   alignment: Alignment.topLeft,
 
-                  child:Container(
+                  child:SizedBox(
 
                     width: 100,
                     height:60,
@@ -69,7 +69,7 @@ class _chatbot_doctorState extends State<chatbot_doctor> {
               Container(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 450),
-                  child: new Expanded(
+                  child: Expanded(
                     child: TextField(
                       decoration: InputDecoration(
                         border:OutlineInputBorder(

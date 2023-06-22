@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:herbit/login.dart';
 import 'package:herbit/public_user/analysis.dart';
-import 'package:herbit/user/chat.dart';
-import 'package:herbit/user/profile_user.dart';
 import 'package:herbit/public_user/prediction.dart';
 import 'package:herbit/public_user/user.dart';
-import '../Login.dart';
+
 
 class homepage extends StatefulWidget {
   const homepage({Key? key}) : super(key: key);
@@ -22,17 +21,17 @@ class _homepageState extends State<homepage> {
         children: [
 
           Expanded(
-            child: Container(
+            child: SizedBox(
               width: double.infinity,
               child: Column(
                 children: [
                   Container(
                     width: double.infinity,
-                    color: Color(0xffd9cac7),
+                    color: const Color(0xffd9cac7),
                     height: 120,
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
+                      children:[
                         Text(
                           'WELCOME TO HERBIT',
                           style: TextStyle(fontSize: 30),
@@ -42,7 +41,7 @@ class _homepageState extends State<homepage> {
                   ),
                   Expanded(
                     child: Container(
-                      child: Image(
+                      child: const Image(
                         image: AssetImage(
                             'images/Aloe-Vera-Variegated-planted-pots-home-garden-horticult.jpeg'),
                         fit: BoxFit.cover,
@@ -61,13 +60,13 @@ class _homepageState extends State<homepage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => analysis(),
+                          builder: (context) => const analysis(),
                         ));
                   },
                   child: Container(
                     height: 60,
                     color: Colors.white,
-                    child: Icon(Icons.analytics, size: 30, color: Colors.green),
+                    child: const Icon(Icons.analytics, size: 30, color: Colors.green),
                   ),
                 ),
               ),
@@ -76,7 +75,7 @@ class _homepageState extends State<homepage> {
                   onTap: () {Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Prediction(),
+                        builder: (context) => const Prediction(),
                       ));
 
                   },
@@ -84,7 +83,7 @@ class _homepageState extends State<homepage> {
                     height: 60,
                     color: Colors.white,
                     child:
-                    Icon(Icons.camera_alt, size: 30, color: Colors.green),
+                    const Icon(Icons.camera_alt, size: 30, color: Colors.green),
                   ),
                 ),
               ),
@@ -94,13 +93,13 @@ class _homepageState extends State<homepage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => user(),
+                          builder: (context) => const user(),
                         ));
                   },
                   child: Container(
                     height: 60,
                     color: Colors.white,
-                    child: Icon(Icons.chat, size: 30, color: Colors.green),
+                    child: const Icon(Icons.chat, size: 30, color: Colors.green),
                   ),
                 ),
               ),
@@ -110,13 +109,13 @@ class _homepageState extends State<homepage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Login(),
+                          builder: (context) => const Login(),
                         ));
                   },
                   child: Container(
                     height: 60,
                     color: Colors.white,
-                    child: Icon(
+                    child: const Icon(
                       Icons.person,
                       size: 30,
                       color: Colors.green,

@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:herbit/public_user/homepage.dart';
-import 'package:herbit/admin/product.dart';
 
 
 class edit extends StatefulWidget {
@@ -37,7 +35,7 @@ class _editState extends State<edit> {
                         //  _openGallery(context);
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     const Padding(padding: EdgeInsets.all(0.0)),
                     /* GestureDetector(
                       child: const Text("Camera"),
@@ -57,7 +55,7 @@ class _editState extends State<edit> {
 
     return Scaffold(
         appBar: AppBar(backgroundColor: Colors.green[900],
-            title: Text("add IMAGE")
+            title: const Text("add IMAGE")
 
         ),
         body: SingleChildScrollView(
@@ -82,14 +80,14 @@ class _editState extends State<edit> {
                           Reference referenceImageToUpload=referenceDirImages.child(uniquename);
 
                           try {
-                           await referenceImageToUpload.putFile(File(file!.path));
+                           referenceImageToUpload.putFile(File(file!.path));
                           imageUrl= await  referenceImageToUpload.getDownloadURL();
 
                           }catch(error){
 
                           }
                         },
-                        child: Text("pick from gallery"),
+                        child: const Text("pick from gallery"),
                       ),
                       ElevatedButton(
                         onPressed: () async {
@@ -105,16 +103,16 @@ class _editState extends State<edit> {
                           Reference referenceImageToUpload=referenceDirImages.child(uniquename);
 
                           try {
-                            await referenceImageToUpload.putFile(File(file!.path));
+                            referenceImageToUpload.putFile(File(file!.path));
                             imageUrl= await  referenceImageToUpload.getDownloadURL();
 
                           }catch(error){
 
                           }
                         },
-                        child: Text("pick from camera"),
+                        child: const Text("pick from camera"),
                       ),
-                      Container(
+                      const SizedBox(
                         height: 100.0,
                         width: 100,
                       ),
@@ -136,15 +134,15 @@ class _editState extends State<edit> {
                         //    _getFromGallery();
                         _showChoiceDialog(context);
                       },
-                      child: Text("Upload Image"),
+                      child: const Text("Upload Image"),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
               Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: TextField(
 
                     decoration: InputDecoration(
@@ -159,11 +157,11 @@ class _editState extends State<edit> {
                   ),
                 ),
               ),
-              SizedBox(height: 15,),
-              Container(
+              const SizedBox(height: 15,),
+              const SizedBox(
                 height: 140,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: TextField(
 
                     decoration: InputDecoration(
@@ -177,7 +175,7 @@ class _editState extends State<edit> {
                   ),
                 ),
               ),
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
               GestureDetector(onTap: () {
              /*   Navigator.push(
                   context,
@@ -192,7 +190,7 @@ class _editState extends State<edit> {
                   ), /* ]*/
                   height: 50,
                   width: 120,
-                  child: Center(child: Text('submit')),
+                  child: const Center(child: Text('submit')),
 
                 ),),
             ],

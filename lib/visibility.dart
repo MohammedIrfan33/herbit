@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 
 enum VisibilityFlag {
   visible,
@@ -16,22 +15,22 @@ class Visibility extends StatelessWidget {
   Visibility({
     required this.child,
     required this.visibility,
-  }) : this.removedChild = Container();
+  }) : removedChild = Container();
 
   @override
   Widget build(BuildContext context) {
     if (visibility == VisibilityFlag.visible) {
       return child;
     } else if (visibility == VisibilityFlag.invisible) {
-      return new IgnorePointer(
+      return IgnorePointer(
         ignoring: true,
-        child: new Opacity(
+        child: Opacity(
           opacity: 0.0,
           child: child,
         ),
       );
     } else if (visibility == VisibilityFlag.offscreen) {
-      return new Offstage(
+      return Offstage(
         offstage: true,
         child: child,
       );
