@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -54,11 +54,7 @@ class _doctorState extends State<doctor> {
 
     await data.get().then((QuerySnapshot querySnapshot) {
       docList = querySnapshot.docs;
-      // for (var doc in querySnapshot.docs) {
-      //   var doctorData = doc.data();
-
-      //   docList.add(doctorData);
-      // }
+      
     });
 
     setState(() {});

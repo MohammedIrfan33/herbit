@@ -25,14 +25,10 @@ class _viewdoctorState extends State<viewdoctor> {
   @override
   Widget build(BuildContext context) {
   return Scaffold(
-  /*appBar: AppBar(
+  appBar: AppBar(
   backgroundColor: Colors.green[900],
-  actions: [
-  IconButton(onPressed: (){
-  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login(),));
-  }, icon: Icon(Icons.home))
-  ],
-  ),*/
+  title: const Text('Doctors'),
+  ),
   body: Padding(
   padding: const EdgeInsets.all(8.0),
   child:StreamBuilder(

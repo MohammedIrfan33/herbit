@@ -20,8 +20,9 @@ class _register_doctorState extends State<register_doctor> {
   final TextEditingController _phonecontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
   final TextEditingController _firstnamecontroller = TextEditingController();
-  final TextEditingController _qualificationcontroller =
-      TextEditingController();
+  final TextEditingController _qualificationcontroller = TextEditingController();
+
+  bool loading = false;
 
   ImagePicker picker = ImagePicker();
   XFile? image;
@@ -117,7 +118,8 @@ class _register_doctorState extends State<register_doctor> {
                         height: 60,
                         width: 60,
                         color: Colors.white,
-                        child: const Image(image: AssetImage('images/leaf.jpg')),
+                        child:
+                            const Image(image: AssetImage('images/leaf.jpg')),
                       )
                     ],
                   ),
@@ -317,8 +319,9 @@ class _register_doctorState extends State<register_doctor> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        //    _getFromGallery();
                         _showChoiceDialog(context);
+
+                        print('imageUrl$imageUrl');
                       },
                       child: const Text("Upload Certificate"),
                     ),
@@ -406,13 +409,20 @@ class _register_doctorState extends State<register_doctor> {
                     color: Colors.green[900],
                   ),
                   height: 60,
-                  child: TextButton(
+                  child:loading ?const Center(child:   CircularProgressIndicator(color: Colors.white,)) :TextButton(
                     child: const Text(
                       'Sign up',
                       style: TextStyle(color: Colors.white, fontSize: 25),
                     ),
-                    onPressed: () {
-                      AuthenticationHelper()
+                    onPressed: () async{
+                    
+
+                    if(_formKey.currentState!.validate())
+                    {
+                    setState(() {
+                      loading = true;
+                    });
+                     await AuthenticationHelper()
                           .Signupdoc(
                               email: _emailcontroller.text,
                               password: _passwordcontroller.text,
@@ -422,13 +432,24 @@ class _register_doctorState extends State<register_doctor> {
                               image: imageUrl,
                               specialisation: selectedValue)
                           .then((result) {
+
+                            setState(() {
+                              loading = false;
+                            });
+
                         if (result == null) {
+
+                          
+
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                 builder: (context) => const Login(),
                               ),
                               (Route route) => false);
                         } else {
+                          setState(() {
+                            loading = false;
+                          });
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(
                               result,
@@ -437,6 +458,16 @@ class _register_doctorState extends State<register_doctor> {
                           ));
                         }
                       });
+                    }else{
+
+                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text(
+                              'Some fields are empty',
+                              style:  TextStyle(fontSize: 16),
+                            ),
+                          ));
+
+                    }
                     },
                   ),
                 ),
@@ -473,7 +504,7 @@ class _register_doctorState extends State<register_doctor> {
   Future<void> _getFromGallery() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
-    print('${file?.path}');
+
     if (file != null) {
       setState(() {
         imageFile = File(file.path);
@@ -486,8 +517,10 @@ class _register_doctorState extends State<register_doctor> {
     Reference referenceImageToUpload = referenceDirImages.child(uniquename);
 
     try {
-      referenceImageToUpload.putFile(File(file!.path));
+      await referenceImageToUpload.putFile(File(file!.path));
       imageUrl = await referenceImageToUpload.getDownloadURL();
+
+      
     } catch (error) {}
   }
 
@@ -508,7 +541,7 @@ class _register_doctorState extends State<register_doctor> {
     Reference referenceImageToUpload = referenceDirImages.child(uniquename);
 
     try {
-      referenceImageToUpload.putFile(File(file!.path));
+      await referenceImageToUpload.putFile(File(file!.path));
       imageUrl = await referenceImageToUpload.getDownloadURL();
     } catch (error) {}
 

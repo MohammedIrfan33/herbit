@@ -30,7 +30,7 @@ class _home_doctorState extends State<home_doctor> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const chatbot_doctor()));
+                      MaterialPageRoute(builder: (context) => const DocChatScreen()));
                 },
                 child: Container(
                   child: Card(

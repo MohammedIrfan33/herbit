@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:herbit/user/user_chat.dart';
 import 'package:herbit/login.dart';
 import 'package:herbit/user/chat.dart';
 import 'package:herbit/user/chatbot.dart';
@@ -63,26 +64,24 @@ class _HomeuserState extends State<Homeuser> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const chatbot()));
+                      MaterialPageRoute(builder: (context) => const ChatScreen()));
                 },
-                child: Container(
-                  child: Card(
-                    elevation: 10,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          'images/png-transparent-medical-service-online-chat-smartphone-doctor-consultant.png',
-                          height: 120,
-                          width: 150,
-                          fit: BoxFit.cover,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(),
-                          child: Text(
-                            'chatbot',style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.bold),),),
-                      ],
-                    ),
+                child: Card(
+                  elevation: 10,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'images/png-transparent-medical-service-online-chat-smartphone-doctor-consultant.png',
+                        height: 120,
+                        width: 150,
+                        fit: BoxFit.cover,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(),
+                        child: Text(
+                          'chatbot',style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold),),),
+                    ],
                   ),
                 ),
               ),
