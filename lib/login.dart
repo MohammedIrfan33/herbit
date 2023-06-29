@@ -26,6 +26,8 @@ class _LoginState extends State<Login> {
   String name1 = "admin";
   String name2 = "doctor";
 
+  bool isloading = false;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +36,10 @@ class _LoginState extends State<Login> {
 
   Future<void> loginWithEmailAndPassword(
       String email, String password, BuildContext context) async {
+
+        setState(() {
+          isloading = true;
+        });
     try {
       // Authenticate user with email and password
       UserCredential userCredential = await FirebaseAuth.instance
@@ -72,7 +78,7 @@ class _LoginState extends State<Login> {
                   const SnackBar(content: Text('Admin not Verified')));
             }
           } else if (role == 'doctor') {
-            print(isAccepted);
+            
             if (isAccepted == true) {
               Navigator.pushReplacement(
                 context,
@@ -110,6 +116,8 @@ class _LoginState extends State<Login> {
           ));
           // Document exists, but data is null
         }
+
+        
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
@@ -119,10 +127,17 @@ class _LoginState extends State<Login> {
         ));
         // Document doesn't exist, handle appropriately
       }
+
+      setState(() {
+          isloading = false;
+        });
     } catch (e) {
-      // Error occurred during login
-      print('Login error: $e');
-      // Handle error
+     
+      setState(() {
+          isloading = false;
+        });
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Something went wrong!')));
+      
     }
   }
 /*  Future<void> loginWithEmailAndPassword(String email, String password) async {
@@ -219,7 +234,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    var child;
+    
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -249,7 +264,7 @@ class _LoginState extends State<Login> {
                         child: Column(
                           children: [
                             const SizedBox(
-                              height: 50,
+                              height: 30,
                             ),
                             Column(
                               children: [
@@ -342,7 +357,7 @@ class _LoginState extends State<Login> {
                                     color: Colors.green[900],
                                   ),
                                   child: TextButton(
-                                    child: const Text(
+                                    child: isloading ?const Center(child: CircularProgressIndicator(color: Colors.white,)) : const Text(
                                       'Sign In',
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 25),

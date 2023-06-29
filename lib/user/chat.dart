@@ -133,20 +133,7 @@ class _chatState extends State<chat> {
             //       }),
             // ),
             
-            const SizedBox(height: 20,),
-            SizedBox(
-              height: 50,
-              child: TextField(
-                controller: symptomControler,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Retype your symptoms",
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
+            
             Container(
               width: double.maxFinite,
               height: 50,

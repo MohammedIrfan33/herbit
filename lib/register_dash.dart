@@ -13,15 +13,7 @@ class MainDash extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-
-        primarySwatch: Colors.blueGrey,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: const MainDashB(title: 'Flutter Demo Home Page'),
-    );
+    return const MainDashB(title: 'Flutter Demo Home Page');
   }
 }
 
@@ -92,87 +84,85 @@ class _MainDashBState extends State<MainDashB> {
         backgroundColor: Colors.green[900],
       ),
       body: SingleChildScrollView(
-        child: Expanded(
-          child: Column(
-            children: [
+        child: Column(
+          children: [
 
-              /*Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Text( "Registration",
-                  style:TextStyle(
-                      fontSize:20,
-                      fontWeight:FontWeight.bold,
-                      color:Colors.black54
-                  ),),
-              ),*/ const SizedBox(
-                height: 40,
-              ),
-              //  GridView.count(
-              //   shrinkWrap: true,
-              //    crossAxisCount: 2,
-              //    padding: EdgeInsets.all(3.0),
-              //    children: <Widget>[
-              //      makeDashboardItem("USER", Icons.person_2),
-              //      makeDashboardItem("COMPANY", Icons.business),
-              //      makeDashboardItem("DEPARTMENT", Icons.factory),
-              //    ],
-              //  ),
-              GridView(
+            /*Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Text( "Registration",
+                style:TextStyle(
+                    fontSize:20,
+                    fontWeight:FontWeight.bold,
+                    color:Colors.black54
+                ),),
+            ),*/ const SizedBox(
+              height: 40,
+            ),
+            //  GridView.count(
+            //   shrinkWrap: true,
+            //    crossAxisCount: 2,
+            //    padding: EdgeInsets.all(3.0),
+            //    children: <Widget>[
+            //      makeDashboardItem("USER", Icons.person_2),
+            //      makeDashboardItem("COMPANY", Icons.business),
+            //      makeDashboardItem("DEPARTMENT", Icons.factory),
+            //    ],
+            //  ),
+            GridView(
 
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(80.0),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,mainAxisSpacing:15,crossAxisSpacing: 10),
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(80.0),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,mainAxisSpacing:15,crossAxisSpacing: 10),
 
-                children: [
-                  InkWell(
-                    onTap: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>const User_signup()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color:Colors.greenAccent[100],
-                      ),
-                      child:const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.person,size:50,color:Colors.black),
-                          SizedBox(height: 5,),
-                          Text("USER",
-                              style:
-                              TextStyle(fontSize: 18.0, color: Colors.black)),
-                        ],
-                      ),
+              children: [
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=>const User_signup()));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color:Colors.greenAccent[100],
+                    ),
+                    child:const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.person,size:50,color:Colors.black),
+                        SizedBox(height: 5,),
+                        Text("USER",
+                            style:
+                            TextStyle(fontSize: 18.0, color: Colors.black)),
+                      ],
                     ),
                   ),
+                ),
 
-                  InkWell(
-                    onTap: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>const register_doctor()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color:Colors.greenAccent[100],
-                      ),
-                      child:const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.medical_information_outlined,size:50,color:Colors.black),
-                          SizedBox(height: 5,),
-                          Text("DOCTOR",
-                              style:
-                              TextStyle(fontSize: 18.0, color: Colors.black)),
-                        ],
-                      ),),
-                  ),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=>const register_doctor()));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color:Colors.greenAccent[100],
+                    ),
+                    child:const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.medical_information_outlined,size:50,color:Colors.black),
+                        SizedBox(height: 5,),
+                        Text("DOCTOR",
+                            style:
+                            TextStyle(fontSize: 18.0, color: Colors.black)),
+                      ],
+                    ),),
+                ),
 
 
 
-                ],)
-            ],
-          ),
+              ],)
+          ],
         ),
       ),
     );

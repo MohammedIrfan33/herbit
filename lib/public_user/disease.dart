@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-
 import 'homepage.dart';
 
 class disease extends StatefulWidget {
-  final String text;
+  final List<String> selectedItems;
 
-
-  const disease(this.text);
+  const disease({required this.selectedItems});
 
   @override
   State<disease> createState() => _diseaseState();
@@ -18,112 +16,128 @@ class _diseaseState extends State<disease> {
   List<Map<String, dynamic>> allData = [];
   List<Map<String, dynamic>> filteredData = [];
 
-  String datas='';
-  @override
+  String datas = '';
+  List<Widget>? listSymptms;
+  List<String>  diseases = [];
+
+  bool loading = false;
+
+
+   @override
   void initState() {
     super.initState();
     fetchData();
-     datas=widget.text;
+    listSymptms = widget.selectedItems.map((e) => Text(e,style: const TextStyle(fontSize: 16),)).toList();
   }
+
   Future<void> fetchData() async {
-    // Retrieve data from Firebase collection
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('symptom').get();
 
-    // Store retrieved data in allData variable
-    allData = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    setState(() {
+      loading  = true;
+    });
 
-    // Apply filter to the data (e.g., filter by a specific field)
-    filteredData = allData.where((data) => data['symptom'] == widget.text).toList();
     
+    // Retrieve data from Firebase collection
+    final snapshot = await FirebaseFirestore.instance.collection('symptom').where('symptom',whereIn: widget.selectedItems).get();
 
-    // Refresh the UI
-    setState(() {});
+     diseases = snapshot.docs.map((doc) => doc['disease'] as String).toList();
+
+     setState(() {
+       loading =false;
+     });
+
+    
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
         actions: [
-          IconButton(onPressed: (){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const homepage(),));
-          }, icon: const Icon(Icons.home))
+          IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const homepage(),
+                    ));
+              },
+              icon: const Icon(Icons.home))
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          physics: const ScrollPhysics(),
+      body:loading ? const Center(child: CircularProgressIndicator(),)  :SingleChildScrollView(
+        physics: const ScrollPhysics(),
+        child: Container(
+          margin: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-
               const SizedBox(
                 height: 30,
               ),
               const Text(
-                'Symptoms',
+                'Symptoms:',
                 style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
-                ),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black54),
               ),
               const SizedBox(
                 height: 10,
               ),
-              Text(
-                widget.text.toUpperCase(),
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-              ),
-            /*  Text(
-                '* headache',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-              ),
-              Text(
-                '* vomiting',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-              ),*/
-              const Text(
-                'Medicine',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
-                ),
+              Column(
+                children: listSymptms!,
               ),
               const SizedBox(
-                height: 10,
-              ),
-    ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-    itemCount: filteredData.length,
-    itemBuilder: (context, index) {
-    // Display the filtered data
-    return ListTile(
-    title: Text(filteredData[index]['medicine'].toUpperCase())
-    );},),
-              const SizedBox(
-                height: 30,
+                height: 20,
               ),
 
-              const SizedBox(height: 100,),
+              
+            
+              const Text(
+                'Diseases :',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black54),
+              ),
+
+              const SizedBox(height: 10,),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: diseases.map((e) => Text(e,style: const TextStyle(fontSize: 16),)).toList(),
+              ),
+              
+              const SizedBox(
+                height: 150,
+              ),
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.symmetric(horizontal: 70),
                 height: 60,
                 color: Colors.green[900],
                 child: TextButton(
-                  child: const Text('OK',style: TextStyle(color: Colors.white,fontSize: 25),),
-                  onPressed: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const homepage(),));
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const homepage(),
+                        ));
                   },
                 ),
               ),
-
+              SizedBox(
+                height: 30,
+              )
             ],
           ),
         ),

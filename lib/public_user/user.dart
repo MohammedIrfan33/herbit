@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:herbit/public_user/disease.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class user extends StatefulWidget {
   const user({Key? key}) : super(key: key);
@@ -10,8 +11,8 @@ class user extends StatefulWidget {
 }
 
 class _userState extends State<user> {
-  String? dropdownvalue ;
-  TextEditingController symptomControler=TextEditingController();
+  String? dropdownvalue;
+  TextEditingController symptomControler = TextEditingController();
 
   // List of items in our dropdown menu
   var items = [
@@ -20,6 +21,31 @@ class _userState extends State<user> {
   ];
   List<String> options = []; // List to store dropdown options
   String selectedOption = ''; // Currently selected option
+
+  List<String> symptomsList = [];
+  List<String> selectedItems = [];
+  getSymptomsData() async {
+    final data = FirebaseFirestore.instance.collection('symptom');
+
+    await data.get().then((QuerySnapshot querySnapshot) {
+      for (var symptom in querySnapshot.docs) {
+        symptomsList.add(symptom.get('symptom'));
+      }
+    });
+    setState(() {});
+  }
+
+
+   @override
+  void initState() {
+    // TODO: implement initState
+     getSymptomsData();
+
+     
+
+     
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,58 +62,18 @@ class _userState extends State<user> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.all(19),
-              child:StreamBuilder<QuerySnapshot>(
-    stream: FirebaseFirestore.instance.collection('symptom').snapshots(),
-    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-      if (snapshot.hasError) {
-        return Text('Error: ${snapshot.error}');
-      }
-
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const CircularProgressIndicator();
-      }
-
-      List<String> data = snapshot.data!.docs.map((
-          doc) => doc['symptom'] as String).toList();
-
-      return DropdownButtonFormField(
-        decoration: const InputDecoration(
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: MultiSelectDialogField(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all()
                 ),
-                borderRadius: BorderRadius.zero),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.zero,
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ))),
-        hint: const Text(
-          'Select Symptoms',
-          style: TextStyle(color: Colors.black),
-        ),
-        value: dropdownvalue,
-        onChanged: (vale) {
-          setState(() {
-            dropdownvalue = vale.toString();
-          });
-        },
-        items: data
-            .map((value) =>
-            DropdownMenuItem(value: value, child: Text(value)))
-            .toList(),
-      );
-    }
-            ),),
-            Padding(
-              padding: const EdgeInsets.all(19),
-              child: TextField(
-                controller: symptomControler,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Retype your symptoms",
-                ),
+                items: symptomsList.map((e) => MultiSelectItem(e, e)).toList(),
+                listType: MultiSelectListType.LIST,
+                onConfirm: (values) {
+                  selectedItems =  values;
+            
+                },
               ),
             ),
             const SizedBox(
@@ -99,7 +85,12 @@ class _userState extends State<user> {
               color: Colors.green[900],
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => disease(symptomControler.text.trim()),));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            disease(selectedItems: selectedItems,),
+                      ));
                 },
                 child: const Text(
                   'Submit ',

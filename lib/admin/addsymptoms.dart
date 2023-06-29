@@ -9,7 +9,7 @@ class addsymptoms extends StatefulWidget {
 
 class _addsymptomsState extends State<addsymptoms> {
   final CollectionReference _symptoms = FirebaseFirestore.instance
-      .collection('symptom'); //refer to the table we created
+      .collection(''); //refer to the table we created
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _prescriptionController = TextEditingController();

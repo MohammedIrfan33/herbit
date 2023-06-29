@@ -29,9 +29,20 @@ class _register_doctorState extends State<register_doctor> {
   File? imageFile;
   late String storedImage;
   String imageUrl = '';
-  String selectedValue = 'General';
+  String ? selectedValue;
 
-  List<String> items = ['General', 'Ortho'];
+  List<String> items= [
+  'Vata',
+  'Pitta',
+  'Kapha',
+  'Digestive System',
+  'Respiratory System',
+  'Joint and Musculoskeletal System',
+  'Skin and Hair Care',
+  "Women's Health",
+  'Stress and Anxiety',
+  'Detoxification',
+];
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -276,6 +287,7 @@ class _register_doctorState extends State<register_doctor> {
                   child: DropdownButton(
                     isExpanded: true,
                     value: selectedValue,
+                    hint: const Text('Select specializations'),
                     elevation: 0,
                     underline: const SizedBox(),
                     dropdownColor: Colors.grey[200],
@@ -318,10 +330,10 @@ class _register_doctorState extends State<register_doctor> {
                       ),
                     ),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green[900]),
                       onPressed: () {
                         _showChoiceDialog(context);
 
-                        print('imageUrl$imageUrl');
                       },
                       child: const Text("Upload Certificate"),
                     ),
@@ -430,7 +442,7 @@ class _register_doctorState extends State<register_doctor> {
                               qualification: _qualificationcontroller.text,
                               phone: _phonecontroller.text,
                               image: imageUrl,
-                              specialisation: selectedValue)
+                              specialisation: selectedValue ?? '')
                           .then((result) {
 
                             setState(() {

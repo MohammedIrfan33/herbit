@@ -81,6 +81,9 @@ class _analysisState extends State<analysis> {
                               "notification": plantName,
                             });
                             _plantController.text = '';
+
+                            Navigator.pop(context);
+                            
                           },
                           child:const Text('submit')),
                     ),

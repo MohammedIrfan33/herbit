@@ -1,6 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:herbit/admin/addnotify.dart';
 import 'package:herbit/admin/addsymptoms.dart';
 import 'package:herbit/public_user/homepage.dart';
 import 'package:herbit/admin/managedoctor.dart';
@@ -188,34 +189,33 @@ class _home_adminState extends State<home_admin> {
 
               InkWell(
                 onTap: () async {
-                  await _auth.signOut();
+                  // await _auth.signOut();
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AddNotify(),));
                  
 
                 },
-                child: Container(
-                  child: Card(
-                    elevation: 10,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Image.asset(
-                            'images/noti.png',
-                            height: 80,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
+                child: Card(
+                  elevation: 10,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Image.asset(
+                          'images/noti.png',
+                          height: 80,
+                          width: 100,
+                          fit: BoxFit.cover,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 30),
-                          child: Text(
-                            'Notifications',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 30),
+                        child: Text(
+                          'Notifications',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
