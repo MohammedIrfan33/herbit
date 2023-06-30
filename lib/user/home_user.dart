@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:herbit/user/chat_list.dart';
 import 'package:herbit/user/user_chat.dart';
 import 'package:herbit/login.dart';
 import 'package:herbit/user/chat.dart';
@@ -64,7 +65,7 @@ class _HomeuserState extends State<Homeuser> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const ChatScreen()));
+                      MaterialPageRoute(builder: (context) => const ChatListScreen()));
                 },
                 child: Card(
                   elevation: 10,
@@ -120,7 +121,7 @@ class _HomeuserState extends State<Homeuser> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const doctor()));
+                      MaterialPageRoute(builder: (context) =>  doctor()));
                 },
                 child: Container(
                   child: Card(

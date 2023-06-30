@@ -7,11 +7,10 @@ import 'doctor.dart';
 import 'home_user.dart';
 
 class prescription extends StatefulWidget {
-  final String sym;
   final List<String> selectedSymptomList;
 
   const prescription({
-    required this.sym,
+    super.key,
     required this.selectedSymptomList,
   });
 
@@ -26,6 +25,7 @@ class _prescriptionState extends State<prescription> {
   String name = '';
   String description = '';
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  bool loading = false;
 
   void fetchUserData() {
     user = FirebaseAuth.instance.currentUser;
@@ -41,12 +41,8 @@ class _prescriptionState extends State<prescription> {
 
         name = data['fullname'] as String;
         age = data['age'] as String;
-      } else {
-        print('User document does not exist');
-      }
-    }).catchError((error) {
-      print('Failed to fetch user data: $error');
-    });
+      } else {}
+    }).catchError((error) {});
   }
 
   List<Map<String, dynamic>> allData = [];
@@ -58,64 +54,60 @@ class _prescriptionState extends State<prescription> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchUserData();
-    datas = widget.sym;
 
     getAgeWithMedicine(widget.selectedSymptomList);
-    fetchData();
   }
 
-  Future<void> fetchData() async {
-    // Retrieve data from Firebase collection
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('symptom').get();
-
-    // Store retrieved data in allData variable
-    allData =
-        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-
-    // Apply filter to the data (e.g., filter by a specific field)
-    filteredData =
-        allData.where((data) => data['symptom'] == widget.sym).toList();
-    print("medicine$filteredData");
-
-    // Refresh the UI
-    setState(() {});
-  }
-
-  List? treatmentList;
+  List treatmentList = [];
+  List medList = [];
 
   getAgeWithMedicine(List<String> selectedSymptomList) async {
-    final data = FirebaseFirestore.instance.collection('symptom');
-
-    await data.get().then((QuerySnapshot querySnapshot) {
-      var allData = querySnapshot.docs
-          .where((element) {
-            var symptom = element.get('symptom');
-            return selectedSymptomList
-                .any((selectedSymptom) => symptom == selectedSymptom);
-          })
-          .map((docSnapshot) => docSnapshot.data())
-          .toList();
-     
+    setState(() {
+      loading = true;
     });
 
+   fetchUserData();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('symptom')
+        .where('symptom', whereIn: widget.selectedSymptomList)
+        .get();
 
+    snapshot.docs.forEach((e) {
+      Map<String, dynamic> data = e.data();
+      treatmentList.addAll(data['treatment']);
+    });
 
-    List<Map<String, dynamic>> filteredData = allData.where((item) {
-  if (item.containsKey('treatment')) {
-    List<Map<String, dynamic>> treatments =
-        List<Map<String, dynamic>>.from(item['treatment']);
-    treatments = treatments.where((treatment) => treatment['age'] == age).toList();
-    if (treatments.isNotEmpty) {
-      item['treatment'] = treatments;
-      return true;
-    }
-  }
-  return false;
-}).toList();
+    final checkAge =  int.parse(age);
 
+    List filteredList = treatmentList.where(
+      (data) {
+        if (checkAge <= 10) {
+          return data['age'] == 10;
+        } else if (checkAge <= 20) {
+          return data['age'] == 20;
+        } else if (checkAge <= 30) {
+          return data['age'] == 30;
+        } else if (checkAge <= 50) {
+          return data['age'] == 50;
+        } else if (checkAge <= 70) {
+          return data['age'] == 70;
+        } else if (checkAge <= 80) {
+          return data['age'] == 80;
+        } else if (checkAge <= 100) {
+          return data['age'] == 100;
+        } else {
+          return false;
+        }
+      },
+    ).toList();
 
+    filteredList.forEach((element) {
+      medList.addAll(element['medicine']);
+    });
+
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -135,157 +127,173 @@ class _prescriptionState extends State<prescription> {
               icon: const Icon(Icons.home))
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                  alignment: Alignment.topRight,
-                  child: Text(
-                    'Date:$formattedDate',
-                    style: const TextStyle(
-                        fontSize: 25, fontWeight: FontWeight.bold),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(top: 25),
-                child: Row(
-                  children: [
-                    const Text(
-                      'Name',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                    ),
-                    const Text(
-                      ':',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      name.toUpperCase(),
+      body:loading ?const Center(child: CircularProgressIndicator(),) :SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Container(
+          margin: const EdgeInsets.all(15),
+          decoration: BoxDecoration(border: Border.all()),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      'Date:$formattedDate',
                       style: const TextStyle(
-                          fontSize: 25, fontWeight: FontWeight.bold),
+                          color: Colors.black54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
+                    )),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          'Name :',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black54),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          name,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          'Age :',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black54),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          age,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w600),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ),
-              Row(
-                children: [
-                  const Text(
-                    'Age',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    width: 22,
-                  ),
-                  const Text(
-                    ':',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    age,
-                    style: const TextStyle(
-                        fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              const Text(
-                'Symptoms',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
+                const SizedBox(
+                  height: 30,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                '* ${widget.sym.toUpperCase()}',
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-              ),
-              /*  Text(
-                '* headache',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-              ),
-              Text(
-                '* vomiting',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-              ),*/
-              const SizedBox(
-                height: 30,
-              ),
-              const Text(
-                'Medicines',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
+                const Text(
+                  'Symptoms :',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black54),
                 ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: filteredData.length,
-                itemBuilder: (context, index) {
-                  // Display the filtered data
-                  String textWithComma = filteredData[index]['medicine'];
-                  List<String> textParts = textWithComma.split(',');
+                const SizedBox(
+                  height: 10,
+                ),
+                widget.selectedSymptomList.isNotEmpty
+                    ? Column(
+                        children: widget.selectedSymptomList
+                            .map((e) => Text(
+                                  e,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                ))
+                            .toList(),
+                      )
+                    : const Text('not found'),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Text(
+                  'Medicines :',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black54),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                medList.isNotEmpty
+                    ? Column(
+                        children: medList
+                            .map((e) => Text(
+                                  e,
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                ))
+                            .toList(),
+                      )
+                    : const Text('not found'),
+                const SizedBox(
+                  height: 5,
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: filteredData.length,
+                  itemBuilder: (context, index) {
+                    // Display the filtered data
+                    String textWithComma = filteredData[index]['medicine'];
+                    List<String> textParts = textWithComma.split(',');
 
-                  return ListTile(
-                      title: RichText(
-                    text: TextSpan(
-                      children: textParts.map((text) {
-                        return TextSpan(
-                          text: text.trim(),
-                          style: const TextStyle(
-                              fontSize: 20, color: Colors.black),
+                    return ListTile(
+                        title: RichText(
+                      text: TextSpan(
+                        children: textParts.map((text) {
+                          return TextSpan(
+                            text: text.trim(),
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.black),
+                          );
+                        }).toList(),
+                      ),
+                    ) /*Text(filteredData[index]['medicine'].toUpperCase())*/
                         );
-                      }).toList(),
-                    ),
-                  ) /*Text(filteredData[index]['medicine'].toUpperCase())*/
-                      );
-                },
-              ),
-              const SizedBox(
-                height: 100,
-              ),
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.symmetric(horizontal: 70),
-                height: 60,
-                color: Colors.green[900],
-                child: TextButton(
-                  child: const Text(
-                    'Consulting',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const doctor(),
-                        ));
                   },
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 100,
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(horizontal: 70),
+                  height: 60,
+                  color: Colors.green[900],
+                  child: TextButton(
+                    child: const Text(
+                      'Consulting',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>  doctor(userName:name,),
+                          ));
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

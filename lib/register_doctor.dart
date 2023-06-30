@@ -20,7 +20,8 @@ class _register_doctorState extends State<register_doctor> {
   final TextEditingController _phonecontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
   final TextEditingController _firstnamecontroller = TextEditingController();
-  final TextEditingController _qualificationcontroller = TextEditingController();
+  final TextEditingController _qualificationcontroller =
+      TextEditingController();
 
   bool loading = false;
 
@@ -29,20 +30,20 @@ class _register_doctorState extends State<register_doctor> {
   File? imageFile;
   late String storedImage;
   String imageUrl = '';
-  String ? selectedValue;
+  String? selectedValue;
 
-  List<String> items= [
-  'Vata',
-  'Pitta',
-  'Kapha',
-  'Digestive System',
-  'Respiratory System',
-  'Joint and Musculoskeletal System',
-  'Skin and Hair Care',
-  "Women's Health",
-  'Stress and Anxiety',
-  'Detoxification',
-];
+  List<String> items = [
+    'Vata',
+    'Pitta',
+    'Kapha',
+    'Digestive System',
+    'Respiratory System',
+    'Joint and Musculoskeletal System',
+    'Skin and Hair Care',
+    "Women's Health",
+    'Stress and Anxiety',
+    'Detoxification',
+  ];
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -330,10 +331,10 @@ class _register_doctorState extends State<register_doctor> {
                       ),
                     ),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green[900]),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green[900]),
                       onPressed: () {
                         _showChoiceDialog(context);
-
                       },
                       child: const Text("Upload Certificate"),
                     ),
@@ -421,67 +422,88 @@ class _register_doctorState extends State<register_doctor> {
                     color: Colors.green[900],
                   ),
                   height: 60,
-                  child:loading ?const Center(child:   CircularProgressIndicator(color: Colors.white,)) :TextButton(
-                    child: const Text(
-                      'Sign up',
-                      style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
-                    onPressed: () async{
-                    
+                  child: loading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ))
+                      : TextButton(
+                          child: const Text(
+                            'Sign up',
+                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          ),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                loading = true;
+                              });
 
-                    if(_formKey.currentState!.validate())
-                    {
-                    setState(() {
-                      loading = true;
-                    });
-                     await AuthenticationHelper()
-                          .Signupdoc(
-                              email: _emailcontroller.text,
-                              password: _passwordcontroller.text,
-                              name: _firstnamecontroller.text,
-                              qualification: _qualificationcontroller.text,
-                              phone: _phonecontroller.text,
-                              image: imageUrl,
-                              specialisation: selectedValue ?? '')
-                          .then((result) {
+                              String uniquename = DateTime.now()
+                                  .microsecondsSinceEpoch
+                                  .toString();
+                              Reference refrenceroot =
+                                  FirebaseStorage.instance.ref();
+                              Reference referenceDirImages =
+                                  refrenceroot.child('images');
 
-                            setState(() {
-                              loading = false;
-                            });
+                              Reference referenceImageToUpload =
+                                  referenceDirImages.child(uniquename);
 
-                        if (result == null) {
+                              try {
+                                await referenceImageToUpload
+                                    .putFile(File(imageFile!.path));
+                                imageUrl = await referenceImageToUpload
+                                    .getDownloadURL();
+                              } catch (error) {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Image not uploaded')));
+                              }
+                              if(imageUrl != ''){
+                              await AuthenticationHelper()
+                                  .Signupdoc(
+                                      email: _emailcontroller.text,
+                                      password: _passwordcontroller.text,
+                                      name: _firstnamecontroller.text,
+                                      qualification:
+                                          _qualificationcontroller.text,
+                                      phone: _phonecontroller.text,
+                                      image: imageUrl,
+                                      specialisation: selectedValue ?? '')
+                                  .then((result) {
+                                setState(() {
+                                  loading = false;
+                                });
 
-                          
-
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) => const Login(),
-                              ),
-                              (Route route) => false);
-                        } else {
-                          setState(() {
-                            loading = false;
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                              result,
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ));
-                        }
-                      });
-                    }else{
-
-                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text(
-                              'Some fields are empty',
-                              style:  TextStyle(fontSize: 16),
-                            ),
-                          ));
-
-                    }
-                    },
-                  ),
+                                if (result == null) {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context) => const Login(),
+                                      ),
+                                      (Route route) => false);
+                                } else {
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                      result,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ));
+                                }
+                              });
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text(
+                                  'Some fields are empty',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ));
+                            }
+                          },
+                        ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -522,40 +544,19 @@ class _register_doctorState extends State<register_doctor> {
         imageFile = File(file.path);
       });
     }
-    String uniquename = DateTime.now().microsecondsSinceEpoch.toString();
-    Reference refrenceroot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = refrenceroot.child('images');
-
-    Reference referenceImageToUpload = referenceDirImages.child(uniquename);
-
-    try {
-      await referenceImageToUpload.putFile(File(file!.path));
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-
-      
-    } catch (error) {}
   }
 
   /// Get from Camera
   Future<void> _getFromCamera() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
-    print('${file?.path}');
+
     if (file != null) {
       setState(() {
         imageFile = File(file.path);
       });
     }
-    String uniquename = DateTime.now().microsecondsSinceEpoch.toString();
-    Reference refrenceroot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = refrenceroot.child('images');
-
-    Reference referenceImageToUpload = referenceDirImages.child(uniquename);
-
-    try {
-      await referenceImageToUpload.putFile(File(file!.path));
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-    } catch (error) {}
+   
 
     /*   PickedFile? pickedFile = await ImagePicker().getImage(
       source: ImageSource.camera,

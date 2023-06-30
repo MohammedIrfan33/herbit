@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 
 import '../public_user/homepage.dart';
+import 'chatbot_doctor.dart';
 
 class Appointments extends StatefulWidget {
   const Appointments({Key? key}) : super(key: key);
@@ -45,38 +46,52 @@ class _AppointmentsState extends State<Appointments> {
                       final appointment = appointments[index].data() as Map<String, dynamic>;
                       final patientName = appointment['name'];
                       final doctorName = appointment['doctor'];
+                      final patientId = appointment['patientId'];
                       final ddate = appointment['date'];
                       final dtime = appointment['time'];
-                      return Container(
-                        child: Column(
-                          children: [
-                            Container(height: 120,
-                              margin: const EdgeInsets.all(10),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.black)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Text("name:" +patientName, style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),),
-                                    Text("date:" +ddate, style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),),
-                                    Text("time:" + dtime, style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),),
+                      return Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.all(10),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.black)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Text("name:" +patientName, style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),),
+                                  Text("date:" +ddate, style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),),
+                                  Text("time:" + dtime, style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),),
 
-                                    const SizedBox(height: 10,),
+                                  const SizedBox(height: 10,),
 
-                                  ],),
-                              ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => DocChatScreen(patientId: patientId,),));
+
+
+                                        
+                                      }, child: Text('chat now')),
+                                      Icon(Icons.arrow_right_alt)
+                                    ],
+                                  )
+
+                                ],),
                             ),
-                          ],),
-                      );
+                          ),
+                        ],);
                     },);
 
                   /*ListView.builder(

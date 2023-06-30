@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/getTime.dart';
 
 class DocChatScreen extends StatefulWidget {
-  const DocChatScreen({super.key});
+   DocChatScreen({super.key,this.patientId});
+
+  String ? patientId;
 
   @override
   _DocChatScreenState createState() => _DocChatScreenState();
@@ -17,12 +19,12 @@ class _DocChatScreenState extends State<DocChatScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Stream<QuerySnapshot>? _messageStream;
 
-  QueryDocumentSnapshot<Object>? selctedUser;
+  //QueryDocumentSnapshot<Object>? selctedUser;
 
   String? specialication;
   bool loading = false;
 
-  var usersChatList = [];
+  // var usersChatList = [];
 
   User? currentUser;
 
@@ -30,7 +32,16 @@ class _DocChatScreenState extends State<DocChatScreen> {
   void initState() {
     currentUser = _auth.currentUser;
 
-    getChatList();
+    _messageStream = _firestore
+                            .collection('chats')
+                            .where('doctorId', isEqualTo: currentUser?.uid)
+                            .where('patientId', isEqualTo: widget.patientId)
+                            .snapshots();
+
+    
+
+   // getChatList();
+
 
     super.initState();
   }
@@ -41,58 +52,58 @@ class _DocChatScreenState extends State<DocChatScreen> {
 
     if (currentUser == null) return;
 
-    if (selctedUser != null) {
+    // if (selctedUser != null) {
       await _firestore.collection('chats').add({
         'doctorId': currentUser?.uid,
-        'patientId': selctedUser?.id,
+        'patientId': widget.patientId,
         'senderId': currentUser?.uid,
         'messageText': messageText,
         'time': DateTime.now().millisecondsSinceEpoch,
       });
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Select doctor')));
-    }
+    // } else {
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(const SnackBar(content: Text('Select doctor')));
+    // }
 
     _messageController.clear();
   }
 
-  getChatList() async {
-    try {
-      setState(() {
-        loading = true;
-      });
+  // getChatList() async {
+  //   try {
+  //     setState(() {
+  //       loading = true;
+  //     });
 
-      var userIdList;
+  //     var userIdList;
 
-      final data = FirebaseFirestore.instance
-          .collection('chats')
-          .where('doctorId', isEqualTo: currentUser?.uid);
+  //     final data = FirebaseFirestore.instance
+  //         .collection('chats')
+  //         .where('doctorId', isEqualTo: currentUser?.uid);
 
-      final usersDatalist = FirebaseFirestore.instance.collection('user_Tb');
+  //     final usersDatalist = FirebaseFirestore.instance.collection('user_Tb');
 
-      await data.get().then((QuerySnapshot querySnapshot) async {
-        userIdList = querySnapshot.docs.map((e) => e['patientId']);
+  //     await data.get().then((QuerySnapshot querySnapshot) async {
+  //       userIdList = querySnapshot.docs.map((e) => e['patientId']);
 
-        await usersDatalist
-            .where(FieldPath.documentId, whereIn: userIdList)
-            .get()
-            .then((QuerySnapshot querySnapshot) =>
-                usersChatList = querySnapshot.docs);
-      });
+  //       await usersDatalist
+  //           .where(FieldPath.documentId, whereIn: userIdList)
+  //           .get()
+  //           .then((QuerySnapshot querySnapshot) =>
+  //               usersChatList = querySnapshot.docs);
+  //     });
 
-      setState(() {
-        loading = false;
-      });
-    } catch (e) {
-      setState(() {
-        loading = false;
-      });
+  //     setState(() {
+  //       loading = false;
+  //     });
+  //   } catch (e) {
+  //     setState(() {
+  //       loading = false;
+  //     });
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Somthing went wrong')));
-    }
-  }
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text('Somthing went wrong')));
+  //   }
+  // }
 
   
 
@@ -145,54 +156,56 @@ class _DocChatScreenState extends State<DocChatScreen> {
                 // ),
                 // const SizedBox(height: 25),
                 // if (docList.isNotEmpty)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  height: 50,
-                  decoration:
-                      BoxDecoration(border: Border.all(color: Colors.black)),
-                  child: DropdownButton(
-                    isExpanded: true,
-                    value: selctedUser,
-                    hint: const Text('Select patient'),
-                    elevation: 0,
-                    underline: const SizedBox(),
-                    dropdownColor: Colors.grey[200],
+                // Container(
+                //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                //   margin: const EdgeInsets.symmetric(horizontal: 10),
+                //   height: 50,
+                //   decoration:
+                //       BoxDecoration(border: Border.all(color: Colors.black)),
+                //   child: DropdownButton(
+                //     isExpanded: true,
+                //     value: selctedUser,
+                //     hint: const Text('Select patient'),
+                //     elevation: 0,
+                //     underline: const SizedBox(),
+                //     dropdownColor: Colors.grey[200],
 
-                    // Down Arrow Icon
-                    icon: const Icon(Icons.keyboard_arrow_down),
+                //     // Down Arrow Icon
+                //     icon: const Icon(Icons.keyboard_arrow_down),
 
-                    // Array list of items
-                    items: usersChatList.map((items) {
-                      return DropdownMenuItem(
-                        value: items,
-                        child: Text(items['fullname']),
-                      );
-                    }).toList(),
-                    // After selecting the desired option,it will
-                    // change button value to selected value
-                    onChanged: (newValue) {
+                //     // Array list of items
+                //     items: usersChatList.map((items) {
+                //       return DropdownMenuItem(
+                //         value: items,
+                //         child: Text(items['fullname']),
+                //       );
+                //     }).toList(),
+                //     // After selecting the desired option,it will
+                //     // change button value to selected value
+                //     onChanged: (newValue) {
                       
-                      setState(() {
-                        selctedUser = newValue! as QueryDocumentSnapshot<Object>?;
+                //       setState(() {
+                //         selctedUser = newValue! as QueryDocumentSnapshot<Object>?;
 
                        
 
-                        _messageStream = _firestore
-                            .collection('chats')
-                            .where('doctorId', isEqualTo: currentUser?.uid)
-                            .where('patientId', isEqualTo: selctedUser?.id)
-                            .snapshots();
-                      });
-                    },
-                  ),
-                ),
-                selctedUser == null
-                    ? const Expanded(
-                        child: Center(
-                        child: Text('Select the doctor'),
-                      ))
-                    : Expanded(
+                //         _messageStream = _firestore
+                //             .collection('chats')
+                //             .where('doctorId', isEqualTo: currentUser?.uid)
+                //             .where('patientId', isEqualTo: selctedUser?.id)
+                //             .snapshots();
+                //       });
+                //     },
+                //   ),
+                // ),
+                
+              //  selctedUser == null
+                    // ? const Expanded(
+                    //     child: Center(
+                    //     child: Text('Select the patients'),
+                    //   ))
+                    // : 
+                    Expanded(
                         child: StreamBuilder<QuerySnapshot>(
                           stream: _messageStream,
                           builder: (context, snapshot) {

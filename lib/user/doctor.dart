@@ -1,12 +1,17 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
 
+import 'home_user.dart';
+
 class doctor extends StatefulWidget {
-  const doctor({Key? key}) : super(key: key);
+   doctor({Key? key,  this.userName}) : super(key: key);
+
+   String  ? userName;
 
   @override
   State<doctor> createState() => _doctorState();
@@ -26,7 +31,18 @@ class _doctorState extends State<doctor> {
   String? specialication;
   QueryDocumentSnapshot<Object>? selcteddoctor;
 
-  List<String> spList = ['General', 'Ortho'];
+  List<String> spList = [
+  'Vata',
+  'Pitta',
+  'Kapha',
+  'Digestive System',
+  'Respiratory System',
+  'Joint and Musculoskeletal System',
+  'Skin and Hair Care',
+  "Women's Health",
+  'Stress and Anxiety',
+  'Detoxification',
+];
 
   var docList = [];
 
@@ -57,12 +73,18 @@ class _doctorState extends State<doctor> {
       
     });
 
+    if(docList.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Doctor Not found')));
+    }
+
     setState(() {});
   }
 
   @override
   void initState() {
     datecontroller.text = "";
+
+    namecontroller.text = widget.userName ?? '';
     super.initState();
   }
 
@@ -86,6 +108,17 @@ class _doctorState extends State<doctor> {
       appBar: AppBar(
         title: const Text('Booking'),
         backgroundColor: Colors.green[900],
+        actions: [
+           IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Homeuser(),
+                    ));
+              },
+              icon: const Icon(Icons.home))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
@@ -160,9 +193,11 @@ class _doctorState extends State<doctor> {
                 ),
               const SizedBox(height: 25),
               TextField(
+                enabled: widget.userName == null ?  true : false,
                 controller: namecontroller,
                 decoration: InputDecoration(
                   enabledBorder: const OutlineInputBorder(),
+                  disabledBorder: const OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(0)),
                   hintText: 'name',
@@ -279,12 +314,15 @@ class _doctorState extends State<doctor> {
                         isLoading = true;
                       });
 
+                      
+                      final userId = FirebaseAuth.instance.currentUser!;
                       await FirebaseFirestore.instance
                           .collection("bookings")
                           .add({
                         "date": startDate,
                         "time": timecontroller.text,
                         "doctor": selcteddoctor?.id,
+                        "patientId": userId.uid,
                         "name": namecontroller.text,
                       }).then((value) {
                         Navigator.pop(context);

@@ -132,6 +132,8 @@ class _chatState extends State<chat> {
             //         );
             //       }),
             // ),
+
+            const SizedBox(height: 20,),
             
             
             Container(
@@ -151,7 +153,7 @@ class _chatState extends State<chat> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            prescription(sym: symptomControler.text.trim(),selectedSymptomList: selectedItems,),
+                            prescription(selectedSymptomList: selectedItems,),
                       ));
                 },
                 child: const Text(

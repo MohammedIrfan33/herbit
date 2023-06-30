@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/getTime.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+   ChatScreen({super.key,this.doctorId});
+
+  String ? doctorId;
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -28,6 +30,12 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     currentUser = _auth.currentUser;
 
+     _messageStream = _firestore
+                        .collection('chats')
+                        .where('doctorId', isEqualTo: selcteddoctor?.id)
+                        .where('patientId', isEqualTo: currentUser?.uid)
+                        .snapshots();
+
     super.initState();
   }
 
@@ -37,34 +45,31 @@ class _ChatScreenState extends State<ChatScreen> {
 
     if (currentUser == null) return;
 
-    if (selcteddoctor != null) {
+   
       await _firestore.collection('chats').add({
-        'doctorId': selcteddoctor?.id,
+        'doctorId': widget.doctorId,
         'patientId': currentUser?.uid,
         'senderId': currentUser?.uid,
         'messageText': messageText,
         'time': DateTime.now().millisecondsSinceEpoch,
       });
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Select doctor')));
-    }
+   
 
     _messageController.clear();
   }
 
-  getDoctorList(String specialication) async {
-    final data = FirebaseFirestore.instance
-        .collection('doctor')
-        .where('specialisation', isEqualTo: specialication);
+  // getDoctorList(String specialication) async {
+  //   final data = FirebaseFirestore.instance
+  //       .collection('doctor')
+  //       .where('specialisation', isEqualTo: specialication);
 
-    await data.get().then((QuerySnapshot querySnapshot) {
-      docList = querySnapshot.docs;
+  //   await data.get().then((QuerySnapshot querySnapshot) {
+  //     docList = querySnapshot.docs;
      
-    });
+  //   });
 
-    setState(() {});
-  }
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -78,78 +83,80 @@ class _ChatScreenState extends State<ChatScreen> {
           const SizedBox(
             height: 20,
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            height: 50,
-            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-            child: DropdownButton<String>(
-              isExpanded: true,
-              value: specialication,
-              hint: const Text('Specialisation'),
-              elevation: 0,
-              underline: const SizedBox(),
-              dropdownColor: Colors.grey[200],
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 10),
+          //   margin: const EdgeInsets.symmetric(horizontal: 10),
+          //   height: 50,
+          //   decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+          //   child: DropdownButton<String>(
+          //     isExpanded: true,
+          //     value: specialication,
+          //     hint: const Text('Specialisation'),
+          //     elevation: 0,
+          //     underline: const SizedBox(),
+          //     dropdownColor: Colors.grey[200],
 
-              // Down Arrow Icon
-              icon: const Icon(Icons.keyboard_arrow_down),
+          //     // Down Arrow Icon
+          //     icon: const Icon(Icons.keyboard_arrow_down),
 
-              // Array list of items
-              items: spList.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
-              // After selecting the desired option,it will
-              // change button value to selected value
-              onChanged: (String? newValue) async {
-                specialication = newValue!;
-                getDoctorList(specialication!);
-              },
-            ),
-          ),
-          const SizedBox(height: 25),
-          if (docList.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              height: 50,
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.black)),
-              child: DropdownButton(
-                isExpanded: true,
-                value: selcteddoctor,
-                hint: const Text('Select Doctor'),
-                elevation: 0,
-                underline: const SizedBox(),
-                dropdownColor: Colors.grey[200],
+          //     // Array list of items
+          //     items: spList.map((String items) {
+          //       return DropdownMenuItem(
+          //         value: items,
+          //         child: Text(items),
+          //       );
+          //     }).toList(),
+          //     // After selecting the desired option,it will
+          //     // change button value to selected value
+          //     onChanged: (String? newValue) async {
+          //       specialication = newValue!;
+          //       getDoctorList(specialication!);
+          //     },
+          //   ),
+          // ),
+          
+          // const SizedBox(height: 25),
+          // if (docList.isNotEmpty)
+          //   Container(
+          //     padding: const EdgeInsets.symmetric(horizontal: 10),
+          //     margin: const EdgeInsets.symmetric(horizontal: 10),
+          //     height: 50,
+          //     decoration:
+          //         BoxDecoration(border: Border.all(color: Colors.black)),
+          //     child: DropdownButton(
+          //       isExpanded: true,
+          //       value: selcteddoctor,
+          //       hint: const Text('Select Doctor'),
+          //       elevation: 0,
+          //       underline: const SizedBox(),
+          //       dropdownColor: Colors.grey[200],
 
-                // Down Arrow Icon
-                icon: const Icon(Icons.keyboard_arrow_down),
+          //       // Down Arrow Icon
+          //       icon: const Icon(Icons.keyboard_arrow_down),
 
-                // Array list of items
-                items: docList.map((items) {
-                  return DropdownMenuItem(
-                    value: items,
-                    child: Text(items['fullname']),
-                  );
-                }).toList(),
-                // After selecting the desired option,it will
-                // change button value to selected value
-                onChanged: (newValue) {
-                  setState(() {
-                    selcteddoctor = newValue! as QueryDocumentSnapshot<Object>?;
-                    _messageStream = _firestore
-                        .collection('chats')
-                        .where('doctorId', isEqualTo: selcteddoctor?.id)
-                        .where('patientId', isEqualTo: currentUser?.uid)
-                        .snapshots();
-                  });
-                },
-              ),
-            ),
-          selcteddoctor == null
+          //       // Array list of items
+          //       items: docList.map((items) {
+          //         return DropdownMenuItem(
+          //           value: items,
+          //           child: Text(items['fullname']),
+          //         );
+          //       }).toList(),
+          //       // After selecting the desired option,it will
+          //       // change button value to selected value
+          //       onChanged: (newValue) {
+          //         setState(() {
+          //           selcteddoctor = newValue! as QueryDocumentSnapshot<Object>?;
+          //           _messageStream = _firestore
+          //               .collection('chats')
+          //               .where('doctorId', isEqualTo: selcteddoctor?.id)
+          //               .where('patientId', isEqualTo: currentUser?.uid)
+          //               .snapshots();
+          //         });
+          //       },
+          //     ),
+          //   ),
+          
+          widget.doctorId == null
               ? const Expanded(
                   child: Center(
                   child: Text('Select the doctor'),
