@@ -325,7 +325,8 @@ class _doctorState extends State<doctor> {
                         "patientId": userId.uid,
                         "name": namecontroller.text,
                       }).then((value) {
-                        Navigator.pop(context);
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Homeuser(),));
+
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Booking completed')));
                       }).catchError((error) =>

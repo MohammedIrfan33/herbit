@@ -64,7 +64,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
       });
 
       ScaffoldMessenger.of(context)
-          .showSnackBar( SnackBar(content: Text(e.toString())));
+          .showSnackBar( const SnackBar(content:  Text('No chats ')));
     }
   }
   @override

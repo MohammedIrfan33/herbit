@@ -21,7 +21,15 @@ class _HomeuserState extends State<Homeuser> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("home"),
-        backgroundColor: Colors.teal[900],),
+        backgroundColor: Colors.teal[900],
+        actions: [
+          IconButton(onPressed: () {
+            const number = '08592119XXXX'; //set the number here
+          bool res = await FlutterPhoneDirectCaller.callNumber(number);
+            
+          }, icon:const  Icon(Icons.phone))
+        ],
+        ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: GridView.count(
@@ -35,30 +43,28 @@ class _HomeuserState extends State<Homeuser> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => const chat()));
                 },
-                child: Container(
-                  child: Card(
-                    elevation: 10,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Image.asset(
-                            'images/png-transparent-computer-icons-online-chat-livechat-chat-miscellaneous-angle-text-thumbnail.png',
-                            height: 80,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
+                child: Card(
+                  elevation: 10,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Image.asset(
+                          'images/png-transparent-computer-icons-online-chat-livechat-chat-miscellaneous-angle-text-thumbnail.png',
+                          height: 80,
+                          width: 100,
+                          fit: BoxFit.cover,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 30),
-                          child: Text(
-                            'chat',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 30),
+                        child: Text(
+                          'chat',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -176,6 +182,7 @@ class _HomeuserState extends State<Homeuser> {
                   ),
                 ),
               ),
+            
             ]),
       ),
     );
