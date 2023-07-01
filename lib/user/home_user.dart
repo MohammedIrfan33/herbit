@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:herbit/user/chat_list.dart';
 import 'package:herbit/user/user_chat.dart';
 import 'package:herbit/login.dart';
@@ -7,6 +8,8 @@ import 'package:herbit/user/chat.dart';
 import 'package:herbit/user/chatbot.dart';
 import 'package:herbit/user/profile_user.dart';
 
+import '../firebase/authentication.dart';
+import '../public_user/homepage.dart';
 import 'doctor.dart';
 class Homeuser extends StatefulWidget {
   const Homeuser({Key? key}) : super(key: key);
@@ -16,6 +19,8 @@ class Homeuser extends StatefulWidget {
 }
 
 class _HomeuserState extends State<Homeuser> {
+
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,14 +28,14 @@ class _HomeuserState extends State<Homeuser> {
         title: const Text("home"),
         backgroundColor: Colors.teal[900],
         actions: [
-          IconButton(onPressed: () {
-            const number = '08592119XXXX'; //set the number here
-          bool res = await FlutterPhoneDirectCaller.callNumber(number);
+          IconButton(onPressed: () async{
+            const number = '123456789'; //set the number here
+          bool? res = await FlutterPhoneDirectCaller.callNumber(number);
             
           }, icon:const  Icon(Icons.phone))
         ],
         ),
-      body: Padding(
+      body:loading ?const  Center(child: CircularProgressIndicator(),) : Padding(
         padding: const EdgeInsets.all(20),
         child: GridView.count(
             crossAxisCount: 2,
@@ -154,31 +159,36 @@ class _HomeuserState extends State<Homeuser> {
                 ),
               ),
               InkWell(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Login()));
+                onTap: () async{
+                  setState(() {
+                    loading = true;
+                  });
+                 await AuthenticationHelper().signOut();
+                 setState(() {
+                    loading = false;
+                  });
+                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => homepage(),), (route) => false);
+                
                 },
-                child: Container(
-                  child: Card(
-                    elevation: 10,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          'images/logout.jpg',
-                          height: 100,
-                          width: 100,
-                          fit: BoxFit.cover,
+                child: Card(
+                  elevation: 10,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'images/logout.jpg',
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 10,top: 3),
+                        child: Text(
+                          'Logout',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 10,top: 3),
-                          child: Text(
-                            'Logout',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

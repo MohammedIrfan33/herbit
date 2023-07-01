@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
@@ -25,7 +26,7 @@ class _doctorState extends State<doctor> {
   List<String> options = []; // List to store dropdown options
   String selectedOption = ''; // Currently selected option
   DateTime selectedDate = DateTime.now();
-  late String startDate;
+   String ? startDate;
   String? dropdownvalue;
 
   String? specialication;
@@ -291,6 +292,8 @@ class _doctorState extends State<doctor> {
                   }
                 },
               ),
+              
+              
               const SizedBox(height: 60),
               Container(
                 height: 50,
@@ -316,6 +319,7 @@ class _doctorState extends State<doctor> {
 
                       
                       final userId = FirebaseAuth.instance.currentUser!;
+                      final deviceToken =await FirebaseMessaging.instance.getToken();
                       await FirebaseFirestore.instance
                           .collection("bookings")
                           .add({
@@ -324,13 +328,17 @@ class _doctorState extends State<doctor> {
                         "doctor": selcteddoctor?.id,
                         "patientId": userId.uid,
                         "name": namecontroller.text,
+                        "isAccepted" : false,
+                        "fcm" : deviceToken,
+                        "ishide" : false,
                       }).then((value) {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Homeuser(),));
 
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Booking completed')));
                       }).catchError((error) =>
-                              print("failed to add new booking $error"));
+                              print("failed to add new booking $error")
+                              );
 
                       setState(() {
                         isLoading = false;

@@ -39,13 +39,11 @@ class _homepageState extends State<homepage> {
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      child: const Image(
-                        image: AssetImage(
-                            'images/Aloe-Vera-Variegated-planted-pots-home-garden-horticult.jpeg'),
-                        fit: BoxFit.cover,
-                      ),
+                 const Expanded(
+                    child:  Image(
+                      image: AssetImage(
+                          'images/Aloe-Vera-Variegated-planted-pots-home-garden-horticult.jpeg'),
+                      fit: BoxFit.cover,
                     ),
                   )
                 ],
