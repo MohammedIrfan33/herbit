@@ -25,6 +25,7 @@ class _HomeuserState extends State<Homeuser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text("home"),
         backgroundColor: Colors.teal[900],
         actions: [

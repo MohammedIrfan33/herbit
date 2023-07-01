@@ -20,6 +20,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   @override
   void initState() {
     currentUser = _auth.currentUser;
+    print(currentUser?.uid);
     super.initState();
     getChatList() ;
     
@@ -35,7 +36,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
       final data = FirebaseFirestore.instance
           .collection('chats')
-          .where('patientId', isEqualTo: currentUser?.uid);
+          .where('patientId', isEqualTo: currentUser?.uid).orderBy('time',descending: true);
 
 
 
@@ -46,7 +47,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
       await data.get().then((QuerySnapshot querySnapshot) async {
         userIdList = querySnapshot.docs.map((e) => e['doctorId']);
 
-        print(userIdList);
+        
 
         await usersDatalist
             .where(FieldPath.documentId, whereIn: userIdList)
