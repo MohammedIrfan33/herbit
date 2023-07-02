@@ -49,6 +49,8 @@ class _LoginState extends State<Login> {
       // Get the user's ID
       String userId = userCredential.user!.uid;
 
+      
+
       // Retrieve the user's role from the Firestore collection
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection('login')
@@ -105,7 +107,6 @@ class _LoginState extends State<Login> {
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
             // Unknown role, handle appropriately
-            print('Unknown role');
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -363,21 +364,12 @@ class _LoginState extends State<Login> {
                                           color: Colors.white, fontSize: 25),
                                     ),
                                     onPressed: () {
-                                      if (_emailcontroller.text ==
-                                          'admin@gmail.com') {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const home_admin(),
-                                          ),
-                                        );
-                                      } else {
+                                      
                                         loginWithEmailAndPassword(
                                             _emailcontroller.text,
                                             _passwordcontroller.text,
                                             context);
-                                      }
+                                      
                                       /*AuthenticationHelper()
                                             .signIn(email: _emailcontroller.text, password: _passwordcontroller.text)
                                             .then((result) {
