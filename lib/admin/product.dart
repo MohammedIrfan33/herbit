@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:herbit/admin/prodcut_edit.dart';
 import 'package:image_picker/image_picker.dart';
 
 class product extends StatefulWidget {
@@ -266,7 +267,7 @@ class _productState extends State<product> {
 
   @override
   Widget build(BuildContext context) {
-    var streamSnapshot;
+    
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.green[900],
@@ -276,61 +277,68 @@ class _productState extends State<product> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.green[900],
           onPressed: () => _create(),
           child: const Icon(Icons.add),
         ),
-        body: Container(
-          child: StreamBuilder(
-            stream: _product.snapshots(),
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-              if (streamSnapshot.hasData) {
-                return ListView.builder(
-                    itemCount: streamSnapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      final DocumentSnapshot documentSnapshot =
-                          streamSnapshot.data!.docs[index];
-                      print("snap $documentSnapshot");
-                      return ListTile(
-                        leading: Image.network(
-                          documentSnapshot['image'],
-                          width: 60,
-                          height: 80,
-                          fit: BoxFit.cover,
+        body:StreamBuilder(
+          stream: _product.snapshots(),
+          builder: (BuildContext context,
+              AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+            if (streamSnapshot.hasData) {
+              return GridView.builder(
+                itemCount: streamSnapshot.data!.docs.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 4.0,
+                    mainAxisSpacing: 4.0
+                ),
+                itemBuilder: (BuildContext context, int index) {
+
+                  final DocumentSnapshot documentSnapshot =
+                  streamSnapshot.data!.docs[index];
+
+                  
+                  
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => ProductEdit(
+                           id : documentSnapshot.id,)));
+                    },
+                    child: Card(
+                      elevation: 10,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: Image.network(
+                              documentSnapshot['image'],
+                              height: 99,
+                              width: 100,
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                         
-                        
-                        
-                        title: Text(documentSnapshot['plant_name']),
-                        subtitle: Text(documentSnapshot['description']),
-                        trailing: SizedBox(
-                          width: 100,
-                          child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () => setState(() {
-                                  _update(documentSnapshot);
-                                }),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () =>setState(() {
-                                  _delete(documentSnapshot.id);
-                                })
-                              )
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 30),
+                            child: Text(
+                              documentSnapshot['plant_name'],
+                              style: const TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                      );
-                    });
-              }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          ),
+                        ],
+                      ),
+                    ),
+                  );
+
+                },);
+            
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
         ));
   }
 

@@ -48,36 +48,34 @@ class _user_detailsState extends State<user_details> {
                       final appointment = appointments[index].data() as Map<String, dynamic>;
                       final patientName = appointment['fullname'];
                       final phone = appointment['phone'];
-                      return Container(
-                        child: Column(
-                          children: [
-                            Container(height: 120,
-                              margin: const EdgeInsets.all(10),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.black)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Text("fullname:" +patientName, style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),),
-                                    Text("phone:" +phone, style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),),
-                                    /* Text("age:" + documentSnapshot['age'], style: TextStyle(
+                      return Column(
+                        children: [
+                          Container(height: 120,
+                            margin: const EdgeInsets.all(10),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.black)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Text("fullname:" +patientName, style: const TextStyle(
                                       color: Colors.black,
-                                      fontWeight: FontWeight.bold),),*/
+                                      fontWeight: FontWeight.bold),),
+                                  Text("phone:" +phone, style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),),
+                                  /* Text("age:" + documentSnapshot['age'], style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),),*/
 
-                                    const SizedBox(height: 10,),
+                                  const SizedBox(height: 10,),
 
-                                  ],),
-                              ),
+                                ],),
                             ),
-                          ],),
-                      );
+                          ),
+                        ],);
                     },);
                 }return const Center(
                   child: CircularProgressIndicator(),

@@ -17,6 +17,8 @@ class _User_signupState extends State<User_signup> {
   final TextEditingController _phonecontroller = TextEditingController();
   final TextEditingController _agecontroller = TextEditingController();
 
+  bool loading = false;
+
   String? validatePhoneNumber(String? phoneNumber) {
     if (phoneNumber == null || phoneNumber.isEmpty) {
       return 'Please enter a phone number.';
@@ -41,7 +43,7 @@ class _User_signupState extends State<User_signup> {
 
   @override
   Widget build(BuildContext context) {
-    var child;
+  
 
     return  Scaffold(
 
@@ -85,31 +87,29 @@ class _User_signupState extends State<User_signup> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: TextFormField(
-                    validator: (valueMail) {
-                      if (valueMail!.isEmpty) {
-                        return 'Please enter Email Id';
-                      }
-                      RegExp email = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-                      if (email.hasMatch(valueMail)) {
-                        return null;
-                      } else {
-                        return 'Invalid Email Id';
-                      }
-                    },
-                    keyboardType: TextInputType.emailAddress,
-                    controller: _emailcontroller,
-                    decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      prefixIcon: Icon(Icons.email_sharp),
-                      border: InputBorder.none,
-                      hintText: "email ",
-                    ),
+                child: TextFormField(
+                  validator: (valueMail) {
+                    if (valueMail!.isEmpty) {
+                      return 'Please enter Email Id';
+                    }
+                    RegExp email = RegExp(
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                    if (email.hasMatch(valueMail)) {
+                      return null;
+                    } else {
+                      return 'Invalid Email Id';
+                    }
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                  controller: _emailcontroller,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                    prefixIcon: Icon(Icons.email_sharp),
+                    border: InputBorder.none,
+                    hintText: "email ",
                   ),
                 ),
               ),
@@ -241,13 +241,18 @@ class _User_signupState extends State<User_signup> {
                   margin: const EdgeInsets.symmetric(horizontal: 60),
                   height: 60,
                   color: Colors.green[900],
-                  child: TextButton(
+                  child: loading ?const Center(child: CircularProgressIndicator(color: Colors.white,),) :TextButton(
                     child: const Text(
                       'Sign up',
                       style: TextStyle(color: Colors.white, fontSize: 25),
                     ),
-                    onPressed: () {
-                      AuthenticationHelper()
+                    onPressed: () async{
+
+                      setState(() {
+                        loading = true;
+                      });
+
+                     await AuthenticationHelper()
                           .signUp(email: _emailcontroller.text, password:_passwordcontroller.text,name:_fullnamecontroller.text,age:_agecontroller.text,phone: _phonecontroller.text)
                           .then((result) {
                         if (result == null) {
@@ -261,6 +266,10 @@ class _User_signupState extends State<User_signup> {
                             ),
                           ));
                         }
+                      }
+                      );
+                      setState(() {
+                        loading = false;
                       });
                     /*  AuthenticationHelper()
                           .signUp(email: _emailcontroller.text, password:_passwordcontroller.text , name: _fullnamecontroller.text, age: _agecontroller.text, phone: _phonecontroller.text)

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:herbit/firebase/authentication.dart';
+import 'package:herbit/utils/notifications.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'login.dart';
@@ -434,9 +435,13 @@ class _register_doctorState extends State<register_doctor> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
+
+
                               setState(() {
                                 loading = true;
                               });
+
+                             
 
                               String uniquename = DateTime.now()
                                   .microsecondsSinceEpoch

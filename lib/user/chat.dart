@@ -41,7 +41,7 @@ class _chatState extends State<chat> {
       for (var symptom in querySnapshot.docs) {
         
 
-        symptomsList.add(symptom.get('symptom'));
+        symptomsList.add(symptom.get('symptoms'));
 
        
       }

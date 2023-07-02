@@ -29,7 +29,7 @@ class _userState extends State<user> {
 
     await data.get().then((QuerySnapshot querySnapshot) {
       for (var symptom in querySnapshot.docs) {
-        symptomsList.add(symptom.get('symptom'));
+        symptomsList.add(symptom.get('symptoms'));
       }
     });
     setState(() {});

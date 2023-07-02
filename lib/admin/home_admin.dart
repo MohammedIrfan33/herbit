@@ -37,30 +37,28 @@ class _home_adminState extends State<home_admin> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => const addsymptoms()));
                 },
-                child: Container(
-                  child: Card(
-                    elevation: 10,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Image.asset(
-                            'images/symptoms.png',
-                            height: 80,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
+                child: Card(
+                  elevation: 10,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Image.asset(
+                          'images/symptoms.png',
+                          height: 80,
+                          width: 100,
+                          fit: BoxFit.cover,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 30),
-                          child: Text(
-                            'symptoms',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 30),
+                        child: Text(
+                          'symptoms',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -69,24 +67,22 @@ class _home_adminState extends State<home_admin> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => const product()));
                 },
-                child: Container(
-                  child: Card(
-                    elevation: 10,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          'images/alternative-medicine-or-herbal-cure-of-energy-therapies-with-ginseng-root-essential-oil-and-seeds-in-flat-cartoon-hand-drawn-templates-illustration-2KE95YD.jpg',
-                          height: 120,
-                          width: 150,
-                          fit: BoxFit.cover,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(),
-                          child: Text(
-                            'Analysis', style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.bold),),),
-                      ],
-                    ),
+                child: Card(
+                  elevation: 10,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'images/alternative-medicine-or-herbal-cure-of-energy-therapies-with-ginseng-root-essential-oil-and-seeds-in-flat-cartoon-hand-drawn-templates-illustration-2KE95YD.jpg',
+                        height: 120,
+                        width: 150,
+                        fit: BoxFit.cover,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(),
+                        child: Text(
+                          'Analysis', style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold),),),
+                    ],
                   ),
                 ),
               ),
@@ -95,30 +91,28 @@ class _home_adminState extends State<home_admin> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => const manageuser()));
                 },
-                child: Container(
-                  child: Card(
-                    elevation: 10,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          'images/manageuser.jpeg',
-                          height: 110,
-                          width: 150,
-                          fit: BoxFit.cover,
+                child: Card(
+                  elevation: 10,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'images/manageuser.jpeg',
+                        height: 110,
+                        width: 150,
+                        fit: BoxFit.cover,
+                      ),
+                      const SizedBox(
+                        height: 2,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: Text(
+                          'Manage user',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(
-                          height: 2,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 20),
-                          child: Text(
-                            'Manage user',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -127,28 +121,26 @@ class _home_adminState extends State<home_admin> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => const managedoctor()));
                 },
-                child: Container(
-                  child: Card(
-                    elevation: 10,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          'images/managedoctor.jpeg',
-                          height: 110,
-                          width: 150,
-                          fit: BoxFit.cover,
+                child: Card(
+                  elevation: 10,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'images/managedoctor.jpeg',
+                        height: 110,
+                        width: 150,
+                        fit: BoxFit.cover,
+                      ),
+                      const Padding(
+                        padding:  EdgeInsets.only(bottom: 10, top: 3),
+                        child: Text(
+                          'Manage doctor',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
                         ),
-                        const Padding(
-                          padding:  EdgeInsets.only(bottom: 10, top: 3),
-                          child: Text(
-                            'Manage doctor',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                      ),
 
-                      ],
-                    ),
+                    ],
                   ),
                 ),
               ),
@@ -159,30 +151,28 @@ class _home_adminState extends State<home_admin> {
                       MaterialPageRoute(builder: (context) => const homepage()), (Route route) => false);
 
                 },
-                child: Container(
-                  child: Card(
-                    elevation: 10,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Image.asset(
-                            'images/logout.jpg',
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
+                child: Card(
+                  elevation: 10,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Image.asset(
+                          'images/logout.jpg',
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 30),
-                          child: Text(
-                            'Logout',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 30),
+                        child: Text(
+                          'Logout',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

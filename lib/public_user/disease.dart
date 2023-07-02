@@ -38,7 +38,7 @@ class _diseaseState extends State<disease> {
 
     
     // Retrieve data from Firebase collection
-    final snapshot = await FirebaseFirestore.instance.collection('symptom').where('symptom',whereIn: widget.selectedItems).get();
+    final snapshot = await FirebaseFirestore.instance.collection('symptom').where('symptoms',whereIn: widget.selectedItems).get();
 
      diseases = snapshot.docs.map((doc) => doc['disease'] as String).toList();
 

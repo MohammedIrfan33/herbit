@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:herbit/doctor/home_doctor.dart';
 import 'package:herbit/register_dash.dart';
@@ -57,6 +58,8 @@ class _LoginState extends State<Login> {
           .doc(userId)
           .get();
 
+      final token = await FirebaseMessaging.instance.getToken();
+
       // Check if the document exists and retrieve the 'role' field
       if (snapshot.exists) {
         Map<String, dynamic>? userData =
@@ -65,9 +68,14 @@ class _LoginState extends State<Login> {
           role = userData['role'] as String;
           bool isAccepted = userData['isAccepted'];
 
-          print("role$role");
+        
 
           if (role == 'user') {
+             await FirebaseFirestore.instance
+          .collection('user_Tb')
+          .doc(userId).update({
+            'token' : token
+          });
             if (isAccepted == true) {
               Navigator.pushReplacement(
                 context,
@@ -81,6 +89,12 @@ class _LoginState extends State<Login> {
             }
           } else if (role == 'doctor') {
             
+             await FirebaseFirestore.instance
+          .collection('doctor')
+          .doc(userId).update({
+            'token' : token
+          });
+            
             if (isAccepted == true) {
               Navigator.pushReplacement(
                 context,
@@ -93,6 +107,18 @@ class _LoginState extends State<Login> {
                   const SnackBar(content: Text('Admin not Verified')));
             }
           } else if (role == 'admin') {
+            
+
+             await FirebaseFirestore.instance
+          .collection('admin')
+          .doc('b5o51l0B3HODOOPW1eMj').update({
+            'token' : token
+          });
+         
+
+             
+
+
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(

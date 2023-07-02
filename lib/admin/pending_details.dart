@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:herbit/admin/home_admin.dart';
+import 'package:herbit/utils/notifications.dart';
 
 
 
@@ -14,7 +15,9 @@ class pending_details extends StatefulWidget {
 
 class _pending_detailsState extends State<pending_details> {
 
-   acceptAppointment(String appointmentId) {
+  final notification = FirebaseNotificatios();
+
+   acceptAppointment(String appointmentId) async{
     FirebaseFirestore.instance
         .collection('user_Tb')
         .doc(appointmentId)
@@ -29,10 +32,22 @@ class _pending_detailsState extends State<pending_details> {
       'isAccepted': true,
       
     });
+
+
+    final token =  await  notification.getUserToken(appointmentId);
+
+     await  notification.sendNotification(
+      deviceToken: token,
+      body: 'Admin Accepted!!!',
+      title: 'Accepted'
+     );
+
+
+    
   }
 
 // Function to reject an appointment
-   rejectAppointment(String appointmentId) {
+   rejectAppointment(String appointmentId) async{
     FirebaseFirestore.instance
         .collection('user_Tb')
         .doc(appointmentId)
@@ -40,6 +55,15 @@ class _pending_detailsState extends State<pending_details> {
       'isRejected': true,
       'status': 'rejected',
     });
+
+    final token =  await  notification.getUserToken(appointmentId);
+
+     await  notification.sendNotification(
+      deviceToken: token,
+      body: 'Admin Rejected!!!',
+      title: 'Rejected'
+     );
+
   }
   void deleteUser(String userId) async {
     try {
@@ -47,7 +71,8 @@ class _pending_detailsState extends State<pending_details> {
           .collection('user_Tb')
           .doc(userId)
           .delete();
-      print('User deleted successfully');
+
+     
     } catch (e) {
       print('Error deleting user: $e');
     }

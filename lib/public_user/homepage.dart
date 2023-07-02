@@ -58,7 +58,7 @@ class _homepageState extends State<homepage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const analysis(),
+                          builder: (context) => const Analysis(),
                         ));
                   },
                   child: Container(

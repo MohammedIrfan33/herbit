@@ -1,31 +1,153 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:herbit/admin/prodcut_edit.dart';
+import 'package:image_picker/image_picker.dart';
 
-class analysis extends StatefulWidget {
-  const analysis({Key? key}) : super(key: key);
+class Analysis extends StatefulWidget {
+  const Analysis({Key? key}) : super(key: key);
 
   @override
-  State<analysis> createState() => _analysisState();
+  State<Analysis> createState() => _AnalysisState();
 }
 
-class _analysisState extends State<analysis> {
-
-  final TextEditingController _plantController = TextEditingController();
-  // List image=["images/download.jpg","images/curryleaf.jpg","images/turmeric.jpg","images/images.jpg"];
-  // List name=["Thulasi","curry leave","turmeric","sunflower",];
-  // List discription=["* natural immunity booster \n* reduce cold& cough \n* anti cancer properties\n* good for diabetes"
-  //   ,"* powerful antioxidant\n* may reduce risk of cancer\n* help in management of diabetes\n* analgesic\n* neuroprotective effect",
-  //   "* reduce inflammation\n* helps ease joint pain\n* enhances mood\n* guards your hearts\n* treats your gut\n* improve immunity system\n* fight free radical damages"
-  //   ,"* improves heart health\n* improve skin health\n* prevent asthma\n* prevent cancer\n* improves hair health\n* improve digestion",
-
-    /* "reduce cold& cough"
-      "anti cancer properties"
-     "good for diabetes"];*/
+class _AnalysisState extends State<Analysis> {
   final CollectionReference _product = FirebaseFirestore.instance
       .collection('product'); //refer to the table we created
+  
+  File? imageFile;
+  File? file;
+  late String storedImage;
 
-  final CollectionReference _products = FirebaseFirestore.instance
-      .collection('notify'); //refer to the table we created
+ final CollectionReference _products = FirebaseFirestore.instance
+      .collection('notify'); 
+
+  String imageUrl = '';
+  final TextEditingController _plantController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _imageController = TextEditingController();
+  Future<void> _showChoiceDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Choose from"),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  GestureDetector(
+                    child: const Text("Gallery"),
+                    onTap: () {
+                      _getFromGallery();
+                      Navigator.pop(context);
+                      //  _openGallery(context);
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  const Padding(padding: EdgeInsets.all(0.0)),
+                  GestureDetector(
+                    child: const Text("Camera"),
+                    onTap: () {
+                      _getFromCamera();
+
+                      Navigator.pop(context);
+                      //   _openCamera(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
+    if (documentSnapshot != null) {
+      _plantController.text = documentSnapshot['plant_name'];
+      _descriptionController.text = documentSnapshot['description'];
+    }
+    await showModalBottomSheet<void>(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext context) {
+          return Padding(
+            padding: EdgeInsets.only(
+                top: 20,
+                left: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20),
+            child: SizedBox(
+              height: 300,
+              child: Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Text('update plants'),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TextField(
+                          controller: _plantController,
+                          decoration: const InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
+                            border: InputBorder.none,
+                            hintText: "enter plants name",
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TextField(
+                          controller: _descriptionController,
+                          decoration: const InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
+                            border: InputBorder.none,
+                            hintText: "enter the description",
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                          onPressed: () async {
+                            final String plantName = _plantController.text;
+                            final String description =
+                                _descriptionController.text;
+
+                            await _product.doc(documentSnapshot!.id).update({
+                              "plant_name": plantName,
+                              "description": description
+                            });
+                            _plantController.text = '';
+                            _descriptionController.text = '';
+                            Navigator.pop(context);
+                          },
+                          child: const Text('update')),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  
+  
+  Future<void> _delete(String productId) async {
+    await _product.doc(productId).delete();
+
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('You have successfully deleted a product')));
+  }
+
+
+
   Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
    
      showDialog(
@@ -112,82 +234,18 @@ class _analysisState extends State<analysis> {
         });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[900],
-        title:const Text(
-          'ANALYSIS',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body:
-      StreamBuilder(
-
-      stream: _product.snapshots(),
-    builder: (BuildContext context,
-
-    AsyncSnapshot<QuerySnapshot>streamSnapshot){
-
-    if(streamSnapshot.hasData){
-    return SingleChildScrollView(
-      physics: const ScrollPhysics(),
-      child: ListView.separated(
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.only(top: 30,left: 20,right: 20),
-        separatorBuilder: (context, index) => const Divider(
-          thickness: 1,
-        
-          
-          height: 30,
-        ),
-        shrinkWrap: true,
-            itemCount:  streamSnapshot.data!.docs.length,
-            itemBuilder: (BuildContext context, int index) {
-
-              final DocumentSnapshot documentSnapshot=streamSnapshot.data!.docs[index];
-              
-              return  Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: Image.network(
-                      documentSnapshot['image'],
-                      fit: BoxFit.cover
-                      ),
-
-                  ),
-              
-                  const SizedBox(width: 10,),
-                  Expanded(
-                    child: Column(
-                     
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                         Text(documentSnapshot['plant_name'],style:const TextStyle(fontSize: 20,color: Colors.green)),
-                         const  SizedBox(height: 10,),
-                        Text(documentSnapshot['description'],maxLines: 2,
-                            overflow: TextOverflow.ellipsis,style:   TextStyle(fontSize: 15,color: Colors.grey[500])),
-                      ],
-                    ),
-                  )
-                ],
-
-              );
-            },
+        appBar: AppBar(
+          backgroundColor: Colors.green[900],
+          title: const Text(
+            'HERBAL',
+            style: TextStyle(color: Colors.white),
           ),
-    );
-
-    }
-    return const Center(
-    child: CircularProgressIndicator(),
-    );
-    },
-    ),
-      floatingActionButton:
+        ),
+        floatingActionButton:
       Padding(
         padding: const EdgeInsets.only(left: 300),
         child: Row(
@@ -198,7 +256,122 @@ class _analysisState extends State<analysis> {
       },
         backgroundColor: Colors.teal[900],
         child: const Icon(Icons.add),
-      ),]))
+      ),])),
+        body: StreamBuilder(
+          stream: _product.snapshots(),
+          builder: (BuildContext context,
+              AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+            if (streamSnapshot.hasData) {
+              return GridView.builder(
+                itemCount: streamSnapshot.data!.docs.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 4.0,
+                    mainAxisSpacing: 4.0),
+                itemBuilder: (BuildContext context, int index) {
+                  final DocumentSnapshot documentSnapshot =
+                      streamSnapshot.data!.docs[index];
+
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductEdit(
+                                   id : documentSnapshot.id,
+                                   isPublicUser: true,
+                                  )));
+                    },
+                    child: Card(
+                      elevation: 10,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: Image.network(
+                              documentSnapshot['image'],
+                              height: 99,
+                              width: 100,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 30),
+                            child: Text(
+                              documentSnapshot['plant_name'],
+                              style: const TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ));
+  }
+
+  /// Get from gallery
+  Future<void> _getFromGallery() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+    print('${file?.path}');
+    if (file != null) {
+      setState(() {
+        imageFile = File(file.path);
+      });
+    }
+    String uniquename = DateTime.now().microsecondsSinceEpoch.toString();
+    Reference refrenceroot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = refrenceroot.child('images');
+
+    Reference referenceImageToUpload = referenceDirImages.child(uniquename);
+
+    try {
+      referenceImageToUpload.putFile(File(file!.path));
+      imageUrl = await referenceImageToUpload.getDownloadURL();
+    } catch (error) {}
+  }
+
+  /// Get from Camera
+  Future<void> _getFromCamera() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
+    print('${file?.path}');
+    if (file != null) {
+      setState(() {
+        imageFile = File(file.path);
+      });
+    }
+    String uniquename = DateTime.now().microsecondsSinceEpoch.toString();
+    Reference refrenceroot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = refrenceroot.child('images');
+
+    Reference referenceImageToUpload = referenceDirImages.child(uniquename);
+
+    try {
+      referenceImageToUpload.putFile(File(file!.path));
+      imageUrl = await referenceImageToUpload.getDownloadURL();
+    } catch (error) {}
+
+    /*   PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera,
+      maxWidth: 1800,
+      maxHeight: 1800,
     );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      */ /*  _filename = basename(imageFile!.path).toString();
+        final _nameWithoutExtension = basenameWithoutExtension(imageFile!.path);
+        final _extenion = extension(imageFile!.path);*/ /*
+      });
+    }*/
   }
 }

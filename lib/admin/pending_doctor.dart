@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:herbit/admin/home_admin.dart';
 
+import '../utils/notifications.dart';
+
 
 
 class pending_doctor extends StatefulWidget {
@@ -14,21 +16,31 @@ class pending_doctor extends StatefulWidget {
 
 class _pending_doctorState extends State<pending_doctor> {
 
-  void acceptAppointment(String appointmentId) {
-    FirebaseFirestore.instance
+ final notification = FirebaseNotificatios();
+
+  void acceptAppointment(String appointmentId) async{
+   await FirebaseFirestore.instance
         .collection('doctor')
         .doc(appointmentId)
         .update({
       'isAccepted': true,
       'status': 'accepted',
     });
-    FirebaseFirestore.instance
+  await  FirebaseFirestore.instance
         .collection('login')
         .doc(appointmentId)
         .update({
       'isAccepted': true,
       'status': 'accepted',
     });
+
+    final token =  await  notification.getDoctorToken(appointmentId);
+
+     await  notification.sendNotification(
+      deviceToken: token,
+      body: 'Admin Accepted!!!',
+      title: 'Accepted'
+     );   
   }
 
 // Function to reject an appointment
@@ -43,6 +55,13 @@ class _pending_doctorState extends State<pending_doctor> {
           .collection('login')
           .doc(appointmentId)
           .delete();
+    final token =  await  notification.getDoctorToken(appointmentId);
+
+     await  notification.sendNotification(
+      deviceToken: token,
+      body: 'Admin Rejected!!!',
+      title: 'Rejected'
+     ); 
 
   }
   @override

@@ -69,7 +69,7 @@ class _prescriptionState extends State<prescription> {
    fetchUserData();
     final snapshot = await FirebaseFirestore.instance
         .collection('symptom')
-        .where('symptom', whereIn: widget.selectedSymptomList)
+        .where('symptoms', whereIn: widget.selectedSymptomList)
         .get();
 
     snapshot.docs.forEach((e) {

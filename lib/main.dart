@@ -23,9 +23,6 @@ NotificationSettings settings = await messaging.requestPermission(
   sound: true,
 );
 
-final t = await messaging.getToken();
-
-print('tokkkkkn${t}');
 
   runApp(const MaterialApp(
     home: SplashScreen(),

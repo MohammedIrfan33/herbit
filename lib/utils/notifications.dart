@@ -33,6 +33,54 @@ class FirebaseNotificatios {
     }
   }
 
+  Future<String> getUserToken(String uid) async {
+
+   
+    try {
+      final adminSnapshot = await FirebaseFirestore.instance
+          .collection('user_Tb')
+          .doc(uid)
+          .get();
+
+      if (adminSnapshot.exists) {
+
+        
+        String token =  await adminSnapshot.get('token');
+        return token;
+      } else {
+        print('Admin document not found');
+        return '';
+      }
+    } catch (error) {
+      print('Error retrieving admin token: $error');
+      return '';
+    }
+  }
+
+  Future<String> getDoctorToken(String uid) async {
+
+   
+    try {
+      final adminSnapshot = await FirebaseFirestore.instance
+          .collection('doctor')
+          .doc(uid)
+          .get();
+
+      if (adminSnapshot.exists) {
+
+        
+        String token =  await adminSnapshot.get('token');
+        return token;
+      } else {
+        print('Admin document not found');
+        return '';
+      }
+    } catch (error) {
+      print('Error retrieving admin token: $error');
+      return '';
+    }
+  }
+
   Future<void> initNotification() async {
     await messaging.requestPermission();
 

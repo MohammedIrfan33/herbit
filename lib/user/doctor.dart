@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:herbit/utils/notifications.dart';
 
 import 'package:intl/intl.dart';
 
@@ -331,7 +332,16 @@ class _doctorState extends State<doctor> {
                         "isAccepted" : false,
                         "fcm" : deviceToken,
                         "ishide" : false,
-                      }).then((value) {
+                      }).then((value) async{
+
+                        final docToken = await FirebaseNotificatios().getDoctorToken(selcteddoctor!.id);
+
+                        await FirebaseNotificatios().sendNotification(
+                          deviceToken: docToken,
+                          body: 'New Booking',
+                          title: 'Booking'
+                        );
+
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Homeuser(),));
 
                         ScaffoldMessenger.of(context).showSnackBar(

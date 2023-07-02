@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../utils/notifications.dart';
+
 class AuthenticationHelper {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -9,6 +11,7 @@ class AuthenticationHelper {
 
 //SIGN UP METHOD
   Future<String?> signUp({required String email, required String password,required String name,required String age,required String phone,}) async {
+    final token = await FirebaseNotificatios().getAdminToken();
     try {
       UserCredential result= await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -22,6 +25,7 @@ class AuthenticationHelper {
         'isAccepted':false,
         'isRejected':true,
         'status':'',
+        'token' : token
       });
       print("user data$user");
       await _db.collection('login').doc(user.uid).set({
@@ -30,7 +34,13 @@ class AuthenticationHelper {
         'role':"user",
         'isAccepted': false
       });
-   //   sendNotificationToAdmin(result.user!.uid);
+
+      await  FirebaseNotificatios().sendNotification(
+        deviceToken: token,
+        body: 'New user Registered',
+        title: 'Registration'
+
+        );
 
       return null;
     } on FirebaseAuthException catch (e) {
@@ -62,6 +72,12 @@ class AuthenticationHelper {
     }
   }
  */ Future<String?> Signupdoc({required String email, required String password,required String name,required String qualification,required String phone,required String image,required String specialisation}) async {
+    
+    final token = await FirebaseNotificatios().getAdminToken();
+
+
+
+    
     try {
       UserCredential result= await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -76,7 +92,8 @@ class AuthenticationHelper {
         'isAccepted':false,
         'isRejected':true,
         'status':'',
-        'specialisation': specialisation
+        'specialisation': specialisation,
+        'token':token
 
       });
      
@@ -86,7 +103,20 @@ class AuthenticationHelper {
         'role':"doctor",
         'isAccepted':false
       });
+
+
+    await  FirebaseNotificatios().sendNotification(
+        deviceToken: token,
+        body: 'New Doctor Registered',
+        title: 'Registration'
+
+        );
+
+
+
       return null;
+
+
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
@@ -103,7 +133,7 @@ class AuthenticationHelper {
         'password': password,
 
       });
-      print("user data$user");
+      
       await _db.collection('login').doc(user.uid).set({
         'email': email,
         'password': password,
