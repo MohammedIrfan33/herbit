@@ -18,7 +18,7 @@ class _diseaseState extends State<disease> {
 
   String datas = '';
   List<Widget>? listSymptms;
-  List<String>  diseases = [];
+  List<dynamic>  diseases = [];
 
   bool loading = false;
 
@@ -40,7 +40,9 @@ class _diseaseState extends State<disease> {
     // Retrieve data from Firebase collection
     final snapshot = await FirebaseFirestore.instance.collection('symptom').where('symptoms',whereIn: widget.selectedItems).get();
 
-     diseases = snapshot.docs.map((doc) => doc['disease'] as String).toList();
+     snapshot.docs.forEach((element) { 
+       diseases.addAll(element.get('disease'));
+     });
 
      setState(() {
        loading =false;
@@ -90,6 +92,7 @@ class _diseaseState extends State<disease> {
                 height: 10,
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: listSymptms!,
               ),
               const SizedBox(

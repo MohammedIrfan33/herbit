@@ -6,7 +6,6 @@ import 'package:herbit/doctor/profile_doctor.dart';
 
 import '../firebase/authentication.dart';
 import '../public_user/homepage.dart';
-import 'chatbot_doctor.dart';
 class home_doctor extends StatefulWidget {
   const home_doctor({Key? key}) : super(key: key);
 

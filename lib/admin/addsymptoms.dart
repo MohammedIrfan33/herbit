@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:herbit/admin/add_symptoms_screen.dart';
+import 'package:herbit/admin/update_symptom.dart';
 class addsymptoms extends StatefulWidget {
   const addsymptoms({Key? key}) : super(key: key);
 
@@ -68,20 +69,25 @@ class _addsymptomsState extends State<addsymptoms> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children:[
                              Text("Symptoms : ${documentSnapshot['symptoms']}"),
-                             Text("Disease : ${documentSnapshot['disease']}")
+                            
                             
                              
                           ]
                         ),
-                        subtitle:Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                       
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                             
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditSymptomsScreen(id: documentSnapshot.id,name: documentSnapshot['symptoms'],),)),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => _delete(documentSnapshot.id),
+                            ),
+                            
                           ],
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => _delete(documentSnapshot.id),
                         ),
                       ),
                     );

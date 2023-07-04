@@ -60,6 +60,7 @@ class _prescriptionState extends State<prescription> {
 
   List treatmentList = [];
   List medList = [];
+  List disList = [];
 
   getAgeWithMedicine(List<String> selectedSymptomList) async {
     setState(() {
@@ -75,6 +76,7 @@ class _prescriptionState extends State<prescription> {
     snapshot.docs.forEach((e) {
       Map<String, dynamic> data = e.data();
       treatmentList.addAll(data['treatment']);
+      disList.addAll(data['disease']);
     });
 
     final checkAge =  int.parse(age);
@@ -103,6 +105,7 @@ class _prescriptionState extends State<prescription> {
 
     filteredList.forEach((element) {
       medList.addAll(element['medicine']);
+      
     });
 
     setState(() {
@@ -208,6 +211,7 @@ class _prescriptionState extends State<prescription> {
                 ),
                 widget.selectedSymptomList.isNotEmpty
                     ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                         children: widget.selectedSymptomList
                             .map((e) => Text(
                                   e,
@@ -221,6 +225,32 @@ class _prescriptionState extends State<prescription> {
                 const SizedBox(
                   height: 30,
                 ),
+
+                const Text(
+                  'Disease :',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black54),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                disList.isNotEmpty
+                    ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                        children: disList
+                            .map((e) => Text(
+                                  e,
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                ))
+                            .toList(),
+                      )
+                    : const Text('not found'),
+
+                const SizedBox(height: 20,),
                 const Text(
                   'Medicines :',
                   style: TextStyle(
@@ -246,30 +276,11 @@ class _prescriptionState extends State<prescription> {
                 const SizedBox(
                   height: 5,
                 ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: filteredData.length,
-                  itemBuilder: (context, index) {
-                    // Display the filtered data
-                    String textWithComma = filteredData[index]['medicine'];
-                    List<String> textParts = textWithComma.split(',');
 
-                    return ListTile(
-                        title: RichText(
-                      text: TextSpan(
-                        children: textParts.map((text) {
-                          return TextSpan(
-                            text: text.trim(),
-                            style: const TextStyle(
-                                fontSize: 20, color: Colors.black),
-                          );
-                        }).toList(),
-                      ),
-                    ) /*Text(filteredData[index]['medicine'].toUpperCase())*/
-                        );
-                  },
-                ),
+
+
+                
+                
                 const SizedBox(
                   height: 100,
                 ),

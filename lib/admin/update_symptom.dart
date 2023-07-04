@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-class AddSymptomsScreen extends StatefulWidget {
-  const AddSymptomsScreen({super.key});
+
+class EditSymptomsScreen extends StatefulWidget {
+  const EditSymptomsScreen({super.key, required this.name, required this.id});
+
+  final String name;
+  final String id;
 
   @override
-  State<AddSymptomsScreen> createState() => _AddSymptomsScreenState();
+  State<EditSymptomsScreen> createState() => _EditSymptomsScreenState();
 }
 
-class _AddSymptomsScreenState extends State<AddSymptomsScreen> {
+class _EditSymptomsScreenState extends State<EditSymptomsScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _desieseController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
@@ -23,6 +25,19 @@ class _AddSymptomsScreenState extends State<AddSymptomsScreen> {
 
   bool isAddSymptoms = false;
   bool isloading = false;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    _nameController.text = widget.name;
+    super.initState();
+
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -174,17 +189,11 @@ class _AddSymptomsScreenState extends State<AddSymptomsScreen> {
                                         vertical: 20),
                                     backgroundColor: Colors.green[900],
                                   ),
-                                  onPressed: () async {
-                                    if (_ageController.text.isNotEmpty &&
-                                        _dosageController.text.isNotEmpty) {
+                                  onPressed: (){
+                                    
                                       medicine.add(_medicineController.text);
                                       _medicineController.clear();
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content:
-                                                  Text('fill age and dosage')));
-                                    }
+                                   
                                   },
                                   child: const Text('Add')),
                             ],
@@ -212,10 +221,27 @@ class _AddSymptomsScreenState extends State<AddSymptomsScreen> {
                                   _ageController.clear();
                                   _dosageController.clear();
 
-                                  isAddSymptoms = true;
+                                
 
-                                  setState(() {});
-                                } else {
+                                  
+                                } else if(medicine.isEmpty){
+
+                                  int age = int.parse(_ageController.text);
+
+                                  treatmantsList.add({
+                                    'age': age,
+                                    'dosage': _dosageController.text,
+                                  
+                                  });
+
+                                  medicine.clear();
+                                 
+
+                                  _ageController.clear();
+                                  _dosageController.clear();
+
+
+                                } else{
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                           content: Text('Add medicine')));
@@ -232,16 +258,17 @@ class _AddSymptomsScreenState extends State<AddSymptomsScreen> {
                   const SizedBox(
                     height: 30,
                   ),
-                  isAddSymptoms
-                      ? ElevatedButton(
+                 ElevatedButton(
                           onPressed: () async {
-                            if (treatmantsList.isNotEmpty) {
-                              setState(() {
+
+                            setState(() {
                                 isloading = true;
                               });
+                            if (treatmantsList.isNotEmpty && desieseList.isNotEmpty) {
+                              
                               await FirebaseFirestore.instance
-                                  .collection('symptom')
-                                  .add({
+                                  .collection('symptom').doc(widget.id)
+                                  .update({
                                 'symptoms': _nameController.text,
                                 'disease':  List.from(desieseList),
                                 'treatment': treatmantsList
@@ -252,30 +279,78 @@ class _AddSymptomsScreenState extends State<AddSymptomsScreen> {
 
                              
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('Added Successfully')));
+                              
 
-                              Navigator.pop(context);
+                              
+                            }else if (treatmantsList.isNotEmpty){
 
-                              setState(() {
-                                isloading = false;
+                              await FirebaseFirestore.instance
+                                  .collection('symptom').doc(widget.id)
+                                  .update({
+                                'symptoms': _nameController.text,
+                                'treatment': treatmantsList
+
                               });
-                            } else {
+
+
+
+
+                            }else if (desieseList.isNotEmpty){
+
+                              await FirebaseFirestore.instance
+                                  .collection('symptom').doc(widget.id)
+                                  .update({
+                                'symptoms': _nameController.text,
+                                 'disease':  List.from(desieseList),
+                                
+
+                              });
+
+
+
+
+                            }else if(treatmantsList.isEmpty&&desieseList.isEmpty){
+
+                              
+                              await FirebaseFirestore.instance
+                                  .collection('symptom').doc(widget.id)
+                                  .update({
+                                'symptoms': _nameController.text,
+                                
+                                
+
+                              });
+
+                              desieseList.clear();
+
+                             
+
+                              
+
+                            
+
+
+                            } else{
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                      content: Text('Add the treatmants')));
+                                      content: Text('Somthing wrong')));
                             }
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                                 const SnackBar(
+                                      content: Text('updated Successfully')));
+
+                              Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green[900],
                               minimumSize: const Size.fromHeight(40)),
                           child: isloading
-                              ? CircularProgressIndicator(
+                              ? const CircularProgressIndicator(
                                   color: Colors.white,
                                 )
                               : const Text('Submit'))
-                      : const SizedBox.shrink()
+                    
                 ],
               ),
             ),

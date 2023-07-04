@@ -5,6 +5,7 @@ import 'package:herbit/utils/notifications.dart';
 import 'package:intl/intl.dart';
 
 import '../public_user/homepage.dart';
+import 'home_doctor.dart';
 
 class communication extends StatefulWidget {
   const communication({Key? key}) : super(key: key);
@@ -49,6 +50,8 @@ class _communicationState extends State<communication> {
             '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
       });
     }
+
+   
   }
 
   void acceptAppointment(String appointmentId, String deviceToken) async {
@@ -130,7 +133,12 @@ class _communicationState extends State<communication> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green[900]),
-                        onPressed: () => _selectDate(context),
+                        onPressed: () async{
+                           await _selectDate(context);
+                          setState(() {
+                            
+                          });
+                          },
                         child: const Text('select'),
                       ),
                     ),
@@ -150,20 +158,18 @@ class _communicationState extends State<communication> {
                       .doc(appointmentId)
                       .update({
                     'isAccepted': true,
-                    'status': 'Accepted',
+                    'status': 'accepted',
                     'time': timecontroller.text,
                     'date': startDate
                   });
 
-                  
-
-                await  FirebaseNotificatios().sendNotification(
+                  await FirebaseNotificatios().sendNotification(
                     deviceToken: deviceToken,
                     body: 'Booking time changed!!!',
                     title: 'Changed!!!',
                   );
 
-                Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 child: const Text('Submit'),
               )
@@ -185,7 +191,7 @@ class _communicationState extends State<communication> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const homepage(),
+                        builder: (context) => const home_doctor(),
                       ));
                 },
                 icon: const Icon(Icons.home))
@@ -286,6 +292,8 @@ class _communicationState extends State<communication> {
                                               color: Colors.green[900],
                                               child: TextButton(
                                                 onPressed: () {
+                                                  startDate = patientDate;
+                                                  timecontroller.text = patientTime;
                                                   rejectAppointment(
                                                       appointmentId);
                                                 },
@@ -311,7 +319,7 @@ class _communicationState extends State<communication> {
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
-                  return const CircularProgressIndicator();
+                  return  Center(child:  CircularProgressIndicator(color: Colors.green[900],));
                 }
               },
             )

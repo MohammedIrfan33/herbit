@@ -2,10 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:herbit/user/chat_list.dart';
-import 'package:herbit/user/user_chat.dart';
-import 'package:herbit/login.dart';
 import 'package:herbit/user/chat.dart';
-import 'package:herbit/user/chatbot.dart';
 import 'package:herbit/user/profile_user.dart';
 
 import '../firebase/authentication.dart';
