@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:herbit/admin/prodcut_edit.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../utils/notifications.dart';
+
 class Analysis extends StatefulWidget {
   const Analysis({Key? key}) : super(key: key);
 
@@ -16,135 +18,17 @@ class _AnalysisState extends State<Analysis> {
   final CollectionReference _product = FirebaseFirestore.instance
       .collection('product'); //refer to the table we created
   
-  File? imageFile;
-  File? file;
-  late String storedImage;
+
+  bool loading =false;
+
 
  final CollectionReference _products = FirebaseFirestore.instance
       .collection('notify'); 
 
   String imageUrl = '';
   final TextEditingController _plantController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _imageController = TextEditingController();
-  Future<void> _showChoiceDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Choose from"),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  GestureDetector(
-                    child: const Text("Gallery"),
-                    onTap: () {
-                      _getFromGallery();
-                      Navigator.pop(context);
-                      //  _openGallery(context);
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  const Padding(padding: EdgeInsets.all(0.0)),
-                  GestureDetector(
-                    child: const Text("Camera"),
-                    onTap: () {
-                      _getFromCamera();
-
-                      Navigator.pop(context);
-                      //   _openCamera(context);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
-    if (documentSnapshot != null) {
-      _plantController.text = documentSnapshot['plant_name'];
-      _descriptionController.text = documentSnapshot['description'];
-    }
-    await showModalBottomSheet<void>(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext context) {
-          return Padding(
-            padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 20),
-            child: SizedBox(
-              height: 300,
-              child: Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const Text('update plants'),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: TextField(
-                          controller: _plantController,
-                          decoration: const InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            border: InputBorder.none,
-                            hintText: "enter plants name",
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: TextField(
-                          controller: _descriptionController,
-                          decoration: const InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            border: InputBorder.none,
-                            hintText: "enter the description",
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                          onPressed: () async {
-                            final String plantName = _plantController.text;
-                            final String description =
-                                _descriptionController.text;
-
-                            await _product.doc(documentSnapshot!.id).update({
-                              "plant_name": plantName,
-                              "description": description
-                            });
-                            _plantController.text = '';
-                            _descriptionController.text = '';
-                            Navigator.pop(context);
-                          },
-                          child: const Text('update')),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        });
-  }
-
   
-  
-  Future<void> _delete(String productId) async {
-    await _product.doc(productId).delete();
-
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('You have successfully deleted a product')));
-  }
+ 
 
 
 
@@ -173,7 +57,7 @@ class _AnalysisState extends State<Analysis> {
               const SizedBox(height: 10,),
                
                 
-                TextField(
+                 TextField(
                   controller: _plantController,
                   decoration:const InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -196,15 +80,38 @@ class _AnalysisState extends State<Analysis> {
                             
                           ),
                           onPressed: () async {
-                              
+                             Navigator.pop(context);
+                              setState(() {
+                                loading = true;
+                              });
                             final String plantName = _plantController.text;
+
+                            
                               
                             await _products.add({
                               "notification": plantName,
+                              "isHide" : false
                             });
+
+                            //notification to admin
+
+                            final deviceToken = await FirebaseNotificatios().getAdminToken();
+
+                            await FirebaseNotificatios().sendNotification(
+                              deviceToken: deviceToken,
+                              title: 'New Suggestion',
+                              body: 'New suggestion by user'
+                            );
+
                             _plantController.text = '';
 
-                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfull!!')));
+                          setState(() {
+                            loading =false;
+                             
+                          });
+                          
+                        
                             
                           },
                           child:const Text('submit')),
@@ -257,7 +164,11 @@ class _AnalysisState extends State<Analysis> {
         backgroundColor: Colors.teal[900],
         child: const Icon(Icons.add),
       ),])),
-        body: StreamBuilder(
+        body: loading ? Center(
+          child: CircularProgressIndicator(
+                    color: Colors.green[900],
+                  ),
+        ) : StreamBuilder(
           stream: _product.snapshots(),
           builder: (BuildContext context,
               AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -317,61 +228,7 @@ class _AnalysisState extends State<Analysis> {
         ));
   }
 
-  /// Get from gallery
-  Future<void> _getFromGallery() async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
-    print('${file?.path}');
-    if (file != null) {
-      setState(() {
-        imageFile = File(file.path);
-      });
-    }
-    String uniquename = DateTime.now().microsecondsSinceEpoch.toString();
-    Reference refrenceroot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = refrenceroot.child('images');
 
-    Reference referenceImageToUpload = referenceDirImages.child(uniquename);
 
-    try {
-      referenceImageToUpload.putFile(File(file!.path));
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-    } catch (error) {}
-  }
 
-  /// Get from Camera
-  Future<void> _getFromCamera() async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
-    print('${file?.path}');
-    if (file != null) {
-      setState(() {
-        imageFile = File(file.path);
-      });
-    }
-    String uniquename = DateTime.now().microsecondsSinceEpoch.toString();
-    Reference refrenceroot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = refrenceroot.child('images');
-
-    Reference referenceImageToUpload = referenceDirImages.child(uniquename);
-
-    try {
-      referenceImageToUpload.putFile(File(file!.path));
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-    } catch (error) {}
-
-    /*   PickedFile? pickedFile = await ImagePicker().getImage(
-      source: ImageSource.camera,
-      maxWidth: 1800,
-      maxHeight: 1800,
-    );
-    if (pickedFile != null) {
-      setState(() {
-        imageFile = File(pickedFile.path);
-      */ /*  _filename = basename(imageFile!.path).toString();
-        final _nameWithoutExtension = basenameWithoutExtension(imageFile!.path);
-        final _extenion = extension(imageFile!.path);*/ /*
-      });
-    }*/
-  }
 }

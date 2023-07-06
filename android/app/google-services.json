@@ -14,6 +14,43 @@
       },
       "oauth_client": [
         {
+          "client_id": "52829143887-f47oenseh9k3svpldhbeke1b0uf3uf2d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.herbit",
+            "certificate_hash": "7f0ab499cf39076268eae2200087c4ec5cfbb423"
+          }
+        },
+        {
+          "client_id": "52829143887-h25vferhf2tci582b8t1m9i82783nlo8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnPJuRjrXZGoIYwmJ3Ad4Vb2pkF4mRRb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52829143887-h25vferhf2tci582b8t1m9i82783nlo8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52829143887:android:7407db20812308db387b3a",
+        "android_client_info": {
+          "package_name": "com.example.plantdiseaseapp"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "52829143887-h25vferhf2tci582b8t1m9i82783nlo8.apps.googleusercontent.com",
           "client_type": 3
         }
