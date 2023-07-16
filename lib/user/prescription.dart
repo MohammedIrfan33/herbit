@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:herbit/user/pdf_prescriptions.dart';
 import 'package:intl/intl.dart';
 
 import 'doctor.dart';
@@ -284,30 +285,69 @@ class _prescriptionState extends State<prescription> {
                 const SizedBox(
                   height: 100,
                 ),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 70),
-                  height: 60,
-                  color: Colors.green[900],
-                  child: TextButton(
-                    child: const Text(
-                      'Consulting',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                 
+                  children: [
+
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+
+                    
+                     
+                      
+                      height: 50,
+                      color: Colors.green[900],
+                      child: TextButton(
+                        child: const Text(
+                          'Consulting',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>  doctor(userName:name,),
+                              ));
+                        },
+                      ),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>  doctor(userName:name,),
-                          ));
-                    },
-                  ),
+
+                    Container(
+                     padding: const EdgeInsets.symmetric(horizontal: 10),
+                      
+                      height: 50,
+                      color: Colors.green[900],
+                      child: TextButton(
+                        child: const Text(
+                          'Download',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>  PdfPrescription(
+                                  name: name, 
+                                  age: age, 
+                                  formattedDate: formattedDate,
+                                  selectedSymptomList: widget.selectedSymptomList.isNotEmpty ? widget.selectedSymptomList : ['no found'],
+                                  medList: medList.isNotEmpty ? medList : ['not found'],
+
+                                )
+                              ));
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ),
       ),
+    
+    
     );
   }
 }

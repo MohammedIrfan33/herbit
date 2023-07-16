@@ -63,6 +63,8 @@ class _communicationState extends State<communication> {
       'status': 'accepted',
     });
 
+    print('user device token:${deviceToken}');
+
     FirebaseNotificatios().sendNotification(
       deviceToken: deviceToken,
       body: 'Booking Accepted doctor!!!',
@@ -162,6 +164,7 @@ class _communicationState extends State<communication> {
                     'time': timecontroller.text,
                     'date': startDate
                   });
+                  print('user device reject token:${deviceToken}');
 
                   await FirebaseNotificatios().sendNotification(
                     deviceToken: deviceToken,
