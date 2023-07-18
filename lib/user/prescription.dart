@@ -223,35 +223,9 @@ class _prescriptionState extends State<prescription> {
                             .toList(),
                       )
                     : const Text('not found'),
-                const SizedBox(
-                  height: 30,
-                ),
+                
 
-                const Text(
-                  'Disease :',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black54),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                disList.isNotEmpty
-                    ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                        children: disList
-                            .map((e) => Text(
-                                  e,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600),
-                                ))
-                            .toList(),
-                      )
-                    : const Text('not found'),
-
-                const SizedBox(height: 20,),
+                const SizedBox(height: 30,),
                 const Text(
                   'Medicines :',
                   style: TextStyle(
