@@ -89,7 +89,7 @@ class _HomeuserState extends State<Homeuser> {
                       const Padding(
                         padding: EdgeInsets.only(),
                         child: Text(
-                          'chatbot',style: TextStyle(
+                          'chat bot',style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),),),
                     ],
                   ),

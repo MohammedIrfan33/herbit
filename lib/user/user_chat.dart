@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
      _messageStream = _firestore
                         .collection('chats')
-                        .where('doctorId', isEqualTo: selcteddoctor?.id)
+                        .where('doctorId', isEqualTo: widget.doctorId)
                         .where('patientId', isEqualTo: currentUser?.uid).orderBy('time',descending: true)
                         .snapshots();
 
