@@ -38,8 +38,7 @@ class _profile_userState extends State<profile_user> {
         fullnameController.text=fullname;
         phnController.text=phone;
         ageController.text=age;
-        print('Fullname: $fullname');
-        print('Place: $phone');
+        
       } else {
         print('User document does not exist');
       }
@@ -153,7 +152,12 @@ class _profile_userState extends State<profile_user> {
                   ),
                 ),
                 ElevatedButton(onPressed: (){
-                  updateUserData(fullnameController.text.trim(), phnController.text.trim(), ageController.text.trim());
+                  updateUserData(
+                    fullnameController.text.trim(), 
+                      ageController.text.trim(),
+                    phnController.text.trim(),
+                   
+                     );
                 }, child: const Text("Update"))
 
               ],
