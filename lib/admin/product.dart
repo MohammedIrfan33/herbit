@@ -237,7 +237,31 @@ class _productState extends State<product> {
                     ElevatedButton(
                         onPressed: () async {
 
-                          final String plantName = _plantController.text;
+
+                          String uniquename = DateTime.now()
+                                  .microsecondsSinceEpoch
+                                  .toString();
+                              Reference refrenceroot =
+                                  FirebaseStorage.instance.ref();
+                              Reference referenceDirImages =
+                                  refrenceroot.child('images');
+
+                              Reference referenceImageToUpload =
+                                  referenceDirImages.child(uniquename);
+
+                              try {
+                                print('image start');
+                                await referenceImageToUpload
+                                    .putFile(File(imageFile!.path));
+                                    print('image upload');
+                                imageUrl = await referenceImageToUpload
+                                    .getDownloadURL();
+                              } catch (error) {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Image not uploaded')));
+                              }
+
+                          if(imageUrl != ''){
+                            final String plantName = _plantController.text;
                           final String description =
                               _descriptionController.text;
                           final String image = imageUrl;
@@ -248,6 +272,11 @@ class _productState extends State<product> {
                           });
                           _plantController.text = '';
                           _descriptionController.text = '';
+
+                          Navigator.pop(context);
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Somthing went wrong')));
+                          }
                         },
                         child: const Text('submit')),
                   ],
@@ -344,47 +373,30 @@ class _productState extends State<product> {
 
   /// Get from gallery
   Future<void> _getFromGallery() async {
+
     ImagePicker imagePicker = ImagePicker();
     XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
-    print('${file?.path}');
+
     if (file != null) {
       setState(() {
         imageFile = File(file.path);
       });
     }
-    String uniquename = DateTime.now().microsecondsSinceEpoch.toString();
-    Reference refrenceroot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = refrenceroot.child('images');
 
-    Reference referenceImageToUpload = referenceDirImages.child(uniquename);
 
-    try {
-      referenceImageToUpload.putFile(File(file!.path));
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-    } catch (error) {}
+   
   }
 
   /// Get from Camera
   Future<void> _getFromCamera() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
-    print('${file?.path}');
+
     if (file != null) {
       setState(() {
         imageFile = File(file.path);
       });
     }
-    String uniquename = DateTime.now().microsecondsSinceEpoch.toString();
-    Reference refrenceroot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = refrenceroot.child('images');
-
-    Reference referenceImageToUpload = referenceDirImages.child(uniquename);
-
-    try {
-      referenceImageToUpload.putFile(File(file!.path));
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-    } catch (error) {}
-
     /*   PickedFile? pickedFile = await ImagePicker().getImage(
       source: ImageSource.camera,
       maxWidth: 1800,

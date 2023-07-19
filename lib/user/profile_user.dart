@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -52,11 +54,12 @@ class _profile_userState extends State<profile_user> {
     super.initState();
     fetchUserData();
   }
-  void updateUserData(String fullname, String age,String phn) {
+  void updateUserData(String fullname, String age,String phn,String  image) {
     FirebaseFirestore.instance.collection('user_Tb').doc(userId).update({
       'fullname': fullname,
       'age': age,
-      'phone':phn
+      'phone':phn,
+       'image': image
     }).then((value) {
       Navigator.push(context, MaterialPageRoute(builder: (context)=>const Homeuser()));
       ScaffoldMessenger.of(context).showSnackBar(
@@ -64,11 +67,52 @@ class _profile_userState extends State<profile_user> {
           content: Text('Data updated successfully'),
         ),
       );
-      print('User data updated successfully!');
+    
     }).catchError((error) {
-      print('Failed to update user data: $error');
+     
     });
   }
+
+
+   Future<void> _showChoiceDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Choose from"),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  GestureDetector(
+                    child: const Text("Gallery"),
+                    onTap: () {
+                      _getFromGallery();
+                      Navigator.pop(context);
+                      //  _openGallery(context);
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  const Padding(padding: EdgeInsets.all(0.0)),
+                  GestureDetector(
+                    child: const Text("Camera"),
+                    onTap: () {
+                      _getFromCamera();
+
+                      Navigator.pop(context);
+                      //   _openCamera(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+
+   File? imageFile;
+
+  String imageUrl = '';
 
   @override
   Widget build(BuildContext context) {
@@ -84,21 +128,40 @@ class _profile_userState extends State<profile_user> {
           child:  Column(
             crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding:  const EdgeInsets.symmetric(vertical: 10),
-                  child: InkWell(
-                    onTap: ()async{
-                      image = await picker.pickImage(
-                          source: ImageSource.gallery);
-                    },
-                    child: const CircleAvatar(
-                      radius: 60,
-                      backgroundImage: AssetImage('images/Herbal.jpg'),
 
-                    ),
+                  Padding(
+              padding: const  EdgeInsets.symmetric(vertical: 10),
+              child: imageFile != null ? Container(
 
-                  ),
+                height: 100,
+                width: 100,
+                clipBehavior: Clip.hardEdge,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle
+                
                 ),
+                child: Image(
+                  fit: BoxFit.cover,
+                  image : FileImage(imageFile!),
+                ),
+
+              )  :CircleAvatar(
+                radius: 60,
+                backgroundImage: AssetImage('images/Herbal.jpg'),
+              ),
+            ),
+
+            ElevatedButton(
+              onPressed: (){
+
+                _showChoiceDialog(context);
+
+
+            }, child: const Text('Edit photo')),
+
+
+
+               
                 const SizedBox(height: 20,),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
@@ -134,7 +197,7 @@ class _profile_userState extends State<profile_user> {
                       filled: true,
                       prefixIcon: Icon(Icons.phone),
                       border: InputBorder.none,
-                      hintText: 'Email',
+                      hintText: 'phone',
                     ),
                   ),
                 ),
@@ -147,7 +210,7 @@ class _profile_userState extends State<profile_user> {
                       filled: true,
                       prefixIcon: Icon(Icons.date_range_sharp,),
                       border: InputBorder.none,
-                      hintText: 'phone',
+                      hintText: 'age',
                     ),
                   ),
                 ),
@@ -156,7 +219,7 @@ class _profile_userState extends State<profile_user> {
                     fullnameController.text.trim(), 
                       ageController.text.trim(),
                     phnController.text.trim(),
-                   
+                    imageUrl
                      );
                 }, child: const Text("Update"))
 
@@ -166,4 +229,32 @@ class _profile_userState extends State<profile_user> {
       ),
     );
   }
+
+  /// Get from gallery
+  Future<void> _getFromGallery() async {
+
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery,imageQuality: 50);
+
+    if (file != null) {
+      setState(() {
+        imageFile = File(file.path);
+      });
+    }
+
+
+   
+  }
+
+  /// Get from Camera
+  Future<void> _getFromCamera() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.camera,imageQuality: 50);
+
+    if (file != null) {
+      setState(() {
+        imageFile = File(file.path);
+      });
+    }
+}
 }
