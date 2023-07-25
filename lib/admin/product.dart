@@ -292,10 +292,30 @@ class _productState extends State<product> {
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('You have successfully deleted a product')));
+
   }
+
+  String _searchTerm = '';
+
+
+  Stream<QuerySnapshot> getFilteredProductsStream() {
+  
+  CollectionReference productsRef = FirebaseFirestore.instance.collection('product');
+
+ 
+  Query query = productsRef.where('plant_name', isGreaterThanOrEqualTo: _searchTerm);
+
+  
+
+
+  return query.snapshots();
+}
+
+ final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    
     
     return Scaffold(
         appBar: AppBar(
@@ -310,64 +330,91 @@ class _productState extends State<product> {
           onPressed: () => _create(),
           child: const Icon(Icons.add),
         ),
-        body:StreamBuilder(
-          stream: _product.snapshots(),
-          builder: (BuildContext context,
-              AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-            if (streamSnapshot.hasData) {
-              return GridView.builder(
-                itemCount: streamSnapshot.data!.docs.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 4.0,
-                    mainAxisSpacing: 4.0
+        body:Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() {
+                  _searchTerm = value;
+                });
+              },
+              decoration:const  InputDecoration(
+                labelText: 'Search',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromARGB(255, 6, 53, 7)),
+                  
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
-                itemBuilder: (BuildContext context, int index) {
-
-                  final DocumentSnapshot documentSnapshot =
-                  streamSnapshot.data!.docs[index];
-
-                  
-                  
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ProductEdit(
-                           id : documentSnapshot.id,)));
-                    },
-                    child: Card(
-                      elevation: 10,
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Image.network(
-                              documentSnapshot['image'],
-                              height: 99,
-                              width: 100,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 30),
-                            child: Text(
-                              documentSnapshot['plant_name'],
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
+              ),
+            ),
+          ),
+            Expanded(
+              child: StreamBuilder(
+                stream: getFilteredProductsStream() ,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                  if (streamSnapshot.hasData) {
+                    return GridView.builder(
+                      itemCount: streamSnapshot.data!.docs.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 4.0,
+                          mainAxisSpacing: 4.0
                       ),
-                    ),
-                  );
-
-                },);
+                      itemBuilder: (BuildContext context, int index) {
             
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+                        final DocumentSnapshot documentSnapshot =
+                        streamSnapshot.data!.docs[index];
+            
+                        
+                        
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => ProductEdit(
+                                 id : documentSnapshot.id,)));
+                          },
+                          child: Card(
+                            elevation: 10,
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15),
+                                  child: Image.network(
+                                    documentSnapshot['image'],
+                                    height: 99,
+                                    width: 100,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 30),
+                                  child: Text(
+                                    documentSnapshot['plant_name'],
+                                    style: const TextStyle(
+                                        fontSize: 15, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+            
+                      },);
+                  
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+            ),
+          ],
         ));
   }
 
