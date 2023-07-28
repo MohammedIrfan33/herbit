@@ -20,7 +20,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   @override
   void initState() {
     currentUser = _auth.currentUser;
-    print(currentUser?.uid);
+    
     super.initState();
     getChatList() ;
     
@@ -82,6 +82,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           : usersChatList.isEmpty ?const Center(child: Text('No Chats'),)  :Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
             child: ListView.separated(
+              shrinkWrap: true,
               
               
                 itemCount: usersChatList.length,

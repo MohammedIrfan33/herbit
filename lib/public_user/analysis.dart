@@ -142,6 +142,26 @@ class _AnalysisState extends State<Analysis> {
   }
 
 
+ String _searchTerm = '';
+
+
+  Stream<QuerySnapshot> getFilteredProductsStream() {
+  
+  CollectionReference productsRef = FirebaseFirestore.instance.collection('product');
+
+ 
+  Query query = productsRef.where('plant_name', isEqualTo: _searchTerm.isEmpty? null : _searchTerm);
+
+  
+
+
+  return query.snapshots();
+}
+
+ final TextEditingController _searchController = TextEditingController();
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,63 +188,90 @@ class _AnalysisState extends State<Analysis> {
           child: CircularProgressIndicator(
                     color: Colors.green[900],
                   ),
-        ) : StreamBuilder(
-          stream: _product.snapshots(),
-          builder: (BuildContext context,
-              AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-            if (streamSnapshot.hasData) {
-              return GridView.builder(
-                itemCount: streamSnapshot.data!.docs.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 4.0,
-                    mainAxisSpacing: 4.0),
-                itemBuilder: (BuildContext context, int index) {
-                  final DocumentSnapshot documentSnapshot =
-                      streamSnapshot.data!.docs[index];
-
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProductEdit(
-                                   id : documentSnapshot.id,
-                                   isPublicUser: true,
-                                  )));
-                    },
-                    child: Card(
-                      elevation: 10,
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Image.network(
-                              documentSnapshot['image'],
-                              height: 99,
-                              width: 100,
-                              fit: BoxFit.fill,
+        ) : Column(
+          children: [
+             Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() {
+                  _searchTerm = value;
+                });
+              },
+              decoration:const  InputDecoration(
+                labelText: 'Search',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromARGB(255, 6, 53, 7)),
+                  
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+              ),
+            ),
+          ),
+           
+            Expanded(
+              child: StreamBuilder(
+                stream:getFilteredProductsStream(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                  if (streamSnapshot.hasData) {
+                    return GridView.builder(
+                      itemCount: streamSnapshot.data!.docs.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 4.0,
+                          mainAxisSpacing: 4.0),
+                      itemBuilder: (BuildContext context, int index) {
+                        final DocumentSnapshot documentSnapshot =
+                            streamSnapshot.data!.docs[index];
+            
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductEdit(
+                                         id : documentSnapshot.id,
+                                         isPublicUser: true,
+                                        )));
+                          },
+                          child: Card(
+                            elevation: 10,
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15),
+                                  child: Image.network(
+                                    documentSnapshot['image'],
+                                    height: 99,
+                                    width: 100,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 30),
+                                  child: Text(
+                                    documentSnapshot['plant_name'],
+                                    style: const TextStyle(
+                                        fontSize: 15, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 30),
-                            child: Text(
-                              documentSnapshot['plant_name'],
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        );
+                      },
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 },
-              );
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+              ),
+            ),
+          ],
         ));
   }
 

@@ -71,7 +71,7 @@ class AuthenticationHelper {
       print('Error sending notification to admin: $e');
     }
   }
- */ Future<String?> Signupdoc({required String email, required String password,required String name,required String qualification,required String phone,required String image,required String specialisation}) async {
+ */ Future<String?> Signupdoc({required String email, required String password,required String name,required String qualification,required String phone,required List image,required String specialisation}) async {
     
     final token = await FirebaseNotificatios().getAdminToken();
 
@@ -179,5 +179,11 @@ class AuthenticationHelper {
     await _auth.signOut();
 
   
+  }
+  //get uid
+  String getUid(){
+   String ? uid = _auth.currentUser?.uid;
+
+   return uid ?? '';
   }
 }

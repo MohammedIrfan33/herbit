@@ -114,6 +114,26 @@ class _homepageState extends State<homepage> {
                     height: 60,
                     color: Colors.white,
                     child: const Icon(
+                      Icons.book,
+                      size: 30,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Login(),
+                        ));
+                  },
+                  child: Container(
+                    height: 60,
+                    color: Colors.white,
+                    child: const Icon(
                       Icons.person,
                       size: 30,
                       color: Colors.green,
@@ -121,6 +141,10 @@ class _homepageState extends State<homepage> {
                   ),
                 ),
               ),
+            
+
+             
+            
             ],
           )
 

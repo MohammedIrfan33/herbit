@@ -28,9 +28,9 @@ class _register_doctorState extends State<register_doctor> {
 
   ImagePicker picker = ImagePicker();
   XFile? image;
-  File? imageFile;
+  List<File> imageFile = [];
   late String storedImage;
-  String imageUrl = '';
+  List<String> imageUrls = [];
   String? selectedValue;
 
   List<String> items = [
@@ -345,26 +345,79 @@ class _register_doctorState extends State<register_doctor> {
                   height: 30,
                 ),
                 Container(
-                  child: imageFile == null
+                  child: imageFile.isEmpty
                       ? const SizedBox.shrink()
                       : Row(
-                          children: [
-                            Container(
-                              width: 70,
-                              height: 70,
-                              alignment: Alignment.centerLeft,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: FileImage(imageFile!),
-                                  fit: BoxFit.cover,
+                          children: imageFile
+                              .map(
+                                (e) => Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              contentPadding: EdgeInsets.zero,
+                                              
+                                              content: Stack(
+                                                children: [
+                                                  Container(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: FileImage(e),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                      top: 0,
+                                                      right: 0,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          imageFile.remove(e);
+                                                          Navigator.pop(context);
+                                                          setState(() {});
+
+                                                        },
+                                                        child: const Icon(Icons
+                                                            .delete_outline,color: Colors.red,
+                                                            ),
+                                                      ))
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 80,
+                                        height: 80,
+                                        alignment: Alignment.centerLeft,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: FileImage(e),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            imageFile.remove(e);
+                                            setState(() {});
+                                          },
+                                          child: Icon(Icons.delete_outline,color:Colors.red),
+                                        ))
+                                  ],
                                 ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                          ],
-                        ),
+                              )
+                              .toList()),
                 ),
                 /*  ElevatedButton(
                   onPressed: () async {
@@ -435,13 +488,9 @@ class _register_doctorState extends State<register_doctor> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-
-
                               setState(() {
                                 loading = true;
                               });
-
-                             
 
                               String uniquename = DateTime.now()
                                   .microsecondsSinceEpoch
@@ -449,54 +498,66 @@ class _register_doctorState extends State<register_doctor> {
                               Reference refrenceroot =
                                   FirebaseStorage.instance.ref();
                               Reference referenceDirImages =
-                                  refrenceroot.child('images');
+                                  refrenceroot.child('doctor');
 
-                              Reference referenceImageToUpload =
-                                  referenceDirImages.child(uniquename);
+                              String imageId =
+                                  await AuthenticationHelper().getUid();
+
+                              print('myid$imageId');
 
                               try {
-                                await referenceImageToUpload
-                                    .putFile(File(imageFile!.path));
-                                imageUrl = await referenceImageToUpload
-                                    .getDownloadURL();
-                              } catch (error) {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Image not uploaded')));
-                              }
-                              if(imageUrl != ''){
-                              await AuthenticationHelper()
-                                  .Signupdoc(
-                                      email: _emailcontroller.text,
-                                      password: _passwordcontroller.text,
-                                      name: _firstnamecontroller.text,
-                                      qualification:
-                                          _qualificationcontroller.text,
-                                      phone: _phonecontroller.text,
-                                      image: imageUrl,
-                                      specialisation: selectedValue ?? '')
-                                  .then((result) {
-                                setState(() {
-                                  loading = false;
-                                });
+                                for (int i = 0; i < imageFile.length; i++) {
+                                  Reference referenceImageToUpload =
+                                      await referenceDirImages
+                                          .child('$imageId/image$i');
 
-                                if (result == null) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context) => const Login(),
-                                      ),
-                                      (Route route) => false);
-                                } else {
+                                  await referenceImageToUpload
+                                      .putFile(File(imageFile[i].path));
+
+                                  String imageUrl = await referenceImageToUpload
+                                      .getDownloadURL();
+                                  imageUrls.add(imageUrl);
+                                }
+                              } catch (error) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('Image not uploaded')));
+                              }
+                              if (imageUrls.isNotEmpty) {
+                                await AuthenticationHelper()
+                                    .Signupdoc(
+                                        email: _emailcontroller.text,
+                                        password: _passwordcontroller.text,
+                                        name: _firstnamecontroller.text,
+                                        qualification:
+                                            _qualificationcontroller.text,
+                                        phone: _phonecontroller.text,
+                                        image: imageUrls,
+                                        specialisation: selectedValue ?? '')
+                                    .then((result) {
                                   setState(() {
                                     loading = false;
                                   });
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: Text(
-                                      result,
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                  ));
-                                }
-                              });
+
+                                  if (result == null) {
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                          builder: (context) => const Login(),
+                                        ),
+                                        (Route route) => false);
+                                  } else {
+                                    setState(() {
+                                      loading = false;
+                                    });
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text(
+                                        result,
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                    ));
+                                  }
+                                });
                               }
                             } else {
                               ScaffoldMessenger.of(context)
@@ -546,7 +607,7 @@ class _register_doctorState extends State<register_doctor> {
 
     if (file != null) {
       setState(() {
-        imageFile = File(file.path);
+        imageFile.add(File(file.path));
       });
     }
   }
@@ -554,14 +615,13 @@ class _register_doctorState extends State<register_doctor> {
   /// Get from Camera
   Future<void> _getFromCamera() async {
     ImagePicker imagePicker = ImagePicker();
-    XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
+    XFile? file = await imagePicker.pickImage(source: ImageSource.camera,imageQuality: 30);
 
     if (file != null) {
       setState(() {
-        imageFile = File(file.path);
+        imageFile.add(File(file.path));
       });
     }
-   
 
     /*   PickedFile? pickedFile = await ImagePicker().getImage(
       source: ImageSource.camera,

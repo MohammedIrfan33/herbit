@@ -303,7 +303,7 @@ class _productState extends State<product> {
   CollectionReference productsRef = FirebaseFirestore.instance.collection('product');
 
  
-  Query query = productsRef.where('plant_name', isGreaterThanOrEqualTo: _searchTerm);
+  Query query = productsRef.where('plant_name', isEqualTo: _searchTerm.isEmpty ? null : _searchTerm);
 
   
 
