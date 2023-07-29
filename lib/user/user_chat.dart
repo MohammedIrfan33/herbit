@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../firebase/file_upload.dart';
@@ -75,6 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
   // }
 
   bool isloading = false;
+  File ? imageFile;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +110,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
                       final messages = snapshot.data!.docs;
 
-                      return ListView.builder(
+                      return
+                       ListView.builder(
                         reverse: true,
                         itemCount: messages.length,
                         itemBuilder: (context, index) {
@@ -188,7 +194,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
                                                     if (!await launchUrl(
                                                         _url,
-                                                         mode: LaunchMode.externalApplication,
+                                                         mode: LaunchMode.externalNonBrowserApplication,
+                                                         
+                                                         
                                                         )) {
                                                       throw Exception(
                                                           'Could not launch $_url');
@@ -244,6 +252,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           );
                         },
                       );
+                    
                     },
                   ),
                 ),
@@ -259,9 +268,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                 ),
-                isloading
-                    ? const CircularProgressIndicator()
-                    : IconButton(
+               IconButton(
                         icon: const Icon(Icons.attachment_outlined),
                         onPressed: () async {
                           setState(() {
@@ -280,6 +287,31 @@ class _ChatScreenState extends State<ChatScreen> {
                         },
                       ),
                 IconButton(
+                        icon: const Icon(Icons.camera_alt),
+                        onPressed: () async {
+                          setState(() {
+                            isloading = true;
+                          });
+
+                          file = await _getFromCamera();
+
+                          
+
+                          final isImage = true;
+
+                          await _sendMessage(file: file, isImage: isImage);
+
+                          setState(() {
+                            isloading = false;
+                          });
+                        },
+                      ),
+                
+                
+                
+                 isloading
+                    ? const CircularProgressIndicator()
+                    : IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
                     _messageController.text.isEmpty
@@ -293,8 +325,33 @@ class _ChatScreenState extends State<ChatScreen> {
               ],
             ),
           ),
+        
+        
         ],
       ),
     );
+  }
+
+  Future<String> _getFromCamera() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.camera,imageQuality: 30);
+
+    if (file != null) {
+      
+        imageFile = File(file.path);
+          Reference storageReference = FirebaseStorage.instance.ref().child('images');
+
+      UploadTask uploadTask = storageReference.putFile(imageFile!);
+      TaskSnapshot snapshot = await uploadTask;
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    }else{
+      return '';
+    }
+
+
+
+
+    
   }
 }

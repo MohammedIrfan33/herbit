@@ -324,7 +324,7 @@ class _doctorState extends State<doctor> {
                       await FirebaseFirestore.instance
                           .collection("bookings")
                           .add({
-                        "date": startDate,
+                        "date": startDate?? '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
                         "time": timecontroller.text,
                         "doctor": selcteddoctor?.id,
                         "patientId": userId.uid,
