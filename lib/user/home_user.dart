@@ -132,7 +132,7 @@ class _HomeuserState extends State<Homeuser> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) =>  doctor()));
                 },
-                child: Container(
+                child:  Container(
                   child: Card(
                     elevation: 10,
                     child: Column(

@@ -10,134 +10,113 @@ class AuthenticationHelper {
   get user => _auth.currentUser;
 
 //SIGN UP METHOD
-  Future<String?> signUp({required String email, required String password,required String name,required String age,required String phone,}) async {
+  Future<String?> signUp({
+    required String email,
+    required String password,
+    required String name,
+    required String age,
+    required String phone,
+  }) async {
     final token = await FirebaseNotificatios().getAdminToken();
     try {
-      UserCredential result= await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      User? user=result.user;
+      User? user = result.user;
       await _db.collection('user_Tb').doc(user!.uid).set({
         'fullname': name,
         'phone': phone,
-        'age':age,
-        'isAccepted':false,
-        'isRejected':true,
-        'status':'',
-        'token' : token
+        'age': age,
+        'isAccepted': false,
+        'isRejected': true,
+        'status': '',
+        'token': token,
+        'pimage': null,
       });
-      print("user data$user");
+
       await _db.collection('login').doc(user.uid).set({
         'email': email,
         'password': password,
-        'role':"user",
+        'role': "user",
         'isAccepted': false
       });
 
-      await  FirebaseNotificatios().sendNotification(
-        deviceToken: token,
-        body: 'New user Registered',
-        title: 'Registration'
-
-        );
+      await FirebaseNotificatios().sendNotification(
+          deviceToken: token,
+          body: 'New user Registered',
+          title: 'Registration');
 
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
   }
-/*  void sendNotificationToAdmin(String userId) async {
-    // Retrieve admin device token from the database or other means
-    String adminDeviceToken = 'ADMIN_DEVICE_TOKEN';
 
-    // Prepare the notification payload
-    final message = {
-      'notification': {
-        'title': 'New user registration',
-        'body': 'A new user has registered and requires approval',
-      },
-      'data': {
-        'user_id': userId,
-      },
-      'token': adminDeviceToken,
-    };
-
-    try {
-      // Send the notification using the FCM API
-      await FirebaseMessaging.instance.send(message);
-      print('Notification sent to admin successfully');
-    } catch (e) {
-      print('Error sending notification to admin: $e');
-    }
-  }
- */ Future<String?> Signupdoc({required String email, required String password,required String name,required String qualification,required String phone,required List image,required String specialisation}) async {
-    
+  Future<String?> Signupdoc(
+      {required String email,
+      required String password,
+      required String name,
+      required String qualification,
+      required String phone,
+      required List image,
+      required String specialisation}) async {
     final token = await FirebaseNotificatios().getAdminToken();
 
-
-
-    
     try {
-      UserCredential result= await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      User? user=result.user;
+      User? user = result.user;
       await _db.collection('doctor').doc(user!.uid).set({
         'fullname': name,
         'phone': phone,
-        'qualification':qualification,
-        'image':image,
-        'isAccepted':false,
-        'isRejected':true,
-        'status':'',
+        'qualification': qualification,
+        'image': image,
+        'isAccepted': false,
+        'isRejected': true,
+        'status': '',
         'specialisation': specialisation,
-        'token':token
-
+        'token': token,
+        'pimage': null,
       });
-     
+
       await _db.collection('login').doc(user.uid).set({
         'email': email,
         'password': password,
-        'role':"doctor",
-        'isAccepted':false
+        'role': "doctor",
+        'isAccepted': false
       });
 
-
-    await  FirebaseNotificatios().sendNotification(
-        deviceToken: token,
-        body: 'New Doctor Registered',
-        title: 'Registration'
-
-        );
-
-
+      await FirebaseNotificatios().sendNotification(
+          deviceToken: token,
+          body: 'New Doctor Registered',
+          title: 'Registration');
 
       return null;
-
-
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
   }
-  Future<String?> Signupad({required String email, required String password}) async {
+
+  Future<String?> Signupad(
+      {required String email, required String password}) async {
     try {
-      UserCredential result= await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      User? user=result.user;
+      User? user = result.user;
       await _db.collection('admin').doc(user!.uid).set({
         'email': email,
         'password': password,
-
       });
-      
+
       await _db.collection('login').doc(user.uid).set({
         'email': email,
         'password': password,
-        'role':"admin",
+        'role': "admin",
       });
       return null;
     } on FirebaseAuthException catch (e) {
@@ -146,15 +125,17 @@ class AuthenticationHelper {
   }
 
   //SIGN IN METHODJ
-  Future<String?> signIn({required String email, required String password}) async {
+  Future<String?> signIn(
+      {required String email, required String password}) async {
     try {
-      UserCredential result= await _auth.signInWithEmailAndPassword(email: email, password: password);
-      User? user=result.user;
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      User? user = result.user;
       await _db.collection('login').doc(user!.uid).set({
         'email': email,
         'password': password,
 
-       // 'role':qualification,
+        // 'role':qualification,
       });
       print("user data$user");
       return null;
@@ -164,10 +145,10 @@ class AuthenticationHelper {
   }
 
 //read
-   read() async {
+  read() async {
     DocumentSnapshot documentSnapshot;
     try {
-      documentSnapshot = await   _db.collection('user_Tb').doc(user!.uid).get();
+      documentSnapshot = await _db.collection('user_Tb').doc(user!.uid).get();
       print(documentSnapshot.data());
     } catch (e) {
       print(e);
@@ -177,13 +158,12 @@ class AuthenticationHelper {
   //SIGN OUT METHOD
   Future<void> signOut() async {
     await _auth.signOut();
-
-  
   }
-  //get uid
-  String getUid(){
-   String ? uid = _auth.currentUser?.uid;
 
-   return uid ?? '';
+  //get uid
+  String getUid() {
+    String? uid = _auth.currentUser?.uid;
+
+    return uid ?? '';
   }
 }

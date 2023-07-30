@@ -623,18 +623,6 @@ class _register_doctorState extends State<register_doctor> {
       });
     }
 
-    /*   PickedFile? pickedFile = await ImagePicker().getImage(
-      source: ImageSource.camera,
-      maxWidth: 1800,
-      maxHeight: 1800,
-    );
-    if (pickedFile != null) {
-      setState(() {
-        imageFile = File(pickedFile.path);
-      */ /*  _filename = basename(imageFile!.path).toString();
-        final _nameWithoutExtension = basenameWithoutExtension(imageFile!.path);
-        final _extenion = extension(imageFile!.path);*/ /*
-      });
-    }*/
+   
   }
 }
